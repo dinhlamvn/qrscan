@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">QR Scan</string>
+
+    <string name="scan_description">MOVE CAMERA TO CODE</string>
+
+    <string name="dialog_result_title">Result</string>
+    <string name="dialog_result_confirm_1">USE</string>
+    <string name="dialog_result_confirm_2">COPY</string>
+    <string name="dialog_result_confirm_3">CANCEL</string>
+
+    <string name="toast_result_empty">The result is empty</string>
+
+    <string name="dialog_notice_title">Notice</string>
+    <string name="dialog_button_open">Open</string>
+    <string name="dialog_button_cancel">Cancel</string>
+    <string name="dialog_button_call">Call</string>
+
 </resources>
