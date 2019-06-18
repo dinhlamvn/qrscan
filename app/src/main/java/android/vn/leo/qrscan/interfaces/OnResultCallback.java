@@ -5,6 +5,11 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 public interface OnResultCallback {
 
     /**
+     * Check if client disable handel with result scan
+     */
+    boolean isDisableHandel();
+
+    /**
      * Check client has result and it was in handle
      * @return true if it is handle, otherwise false
      */

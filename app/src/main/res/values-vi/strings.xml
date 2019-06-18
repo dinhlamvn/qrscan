@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Code Scanner</string>
+    <string name="developer">Lâm Công Đỉnh</string>
+    <string name="developer_contact">dinhlamvn353@gmail.com</string>
+    <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>
+
+    <string name="screen_scan">QUÉT</string>
+    <string name="screen_history">LỊCH SỬ</string>
+    <string name="scan_description">DI CHUYỂN CAMERA ĐẾN MÃ</string>
+
+    <!-- Share message send to other user -->
+    <string name="share_message">Đây là một ứng dụng quét QRCode và Barcode rất tốt. Bạn có thể tải nó bằng link bên dưới.</string>
+
+    <string name="dialog_result_title">Kết quả</string>
+    <string name="dialog_result_confirm_1">SỬ DỤNG</string>
+    <string name="dialog_result_confirm_2">SAO CHÉP</string>
+    <string name="dialog_result_confirm_3">HỦY</string>
+
+    <string name="toast_result_empty">Kết quả trống</string>
+
+    <string name="dialog_notice_title">Thông báo</string>
+    <string name="dialog_button_open">Mở</string>
+    <string name="dialog_button_cancel">Hủy</string>
+    <string name="dialog_button_call">Cuộc gọi</string>
+
+    <!-- Resource for menu -->
+    <string name="menu_item_home">Màn hình chính</string>
+    <string name="menu_item_setting">Cài đặt</string>
+    <string name="menu_item_rate">Đánh giá</string>
+    <string name="menu_item_share">Chia sẻ</string>
+    <string name="menu_item_about">Thông tin</string>
+    <string name="menu_item_exit">Thoát</string>
+
+
+    <!-- String resource for setting -->
+    <string name="label_checkbox_auto_copy">Tự động sao chép kết quả sau khi quét</string>
+    <string name="label_checkbox_auto_make_call">Tự động thực hiện cuộc gọi</string>
+    <string name="label_checkbox_auto_access_to_url">Tự động mở trình duyệt Web với URL quét được</string>
+    <string name="label_checkbox_save_image_code">Lưu ảnh chụp của mã được quét</string>
+    <string name="label_checkbox_enable_sound">Bật âm thanh</string>
+    <string name="label_checkbox_enable_vibrate">Bật run</string>
+
+    <!-- Notify message resource -->
+    <string name="toast_message_accept_setting">Cài đặt được lưu lại</string>
+    <string name="toast_message_removed">Bạn vừa xóa một kết quả</string>
+    <string name="toast_message_restored">Khôi phục kết quả xóa thành công</string>
+
+    <!-- About dialog resource -->
+    <string name="dialog_about_title">Thông tin</string>
+    <string name="dialog_about_message">Tên ứng dụng: %s \nPhiên bản: %s \nNhà phát triển: %s \nLiên hệ: %s</string>
+    <string name="dialog_about_button">OK</string>
+
+    <!-- Confirm dialog message -->
+    <string name="dialog_open_web_web_browser">Trình duyệt Web</string>
+    <string name="dialog_call_call">thực hiện cuộc gọi đến</string>
+    <string name="dialog_open_web_confirm_message">Bạn có muốn mở %s với url là: %s ?</string>
+    <string name="dialog_call_confirm_message">Bạn có muốn %s: %s ?</string>
+
+    <!-- Other resource -->
+    <string name="chose_app_share">CHỌN ỨNG DỤNG CHIA SẺ</string>
+    <string name="can_not_save_image">KHÔNG THỂ LƯU ẢNH</string>
+    <string name="chose_app_send_mail">CHỌN ỨNG DỤNG GỬI MAIL</string>
+    <string name="undo_text">KHÔI PHỤC</string>
+    <string name="removed_text">Đã xóa</string>
+    <string name="removed_fail_text">Xóa thất bại</string>
+
+    <!-- Use resource -->
+    <string name="use_with_text">SAO CHÉP</string>
+    <string name="use_with_call">CUỘC GỌI</string>
+    <string name="use_with_sms">GỬI TIN NHẮN</string>
+    <string name="use_with_url">TRUY CẬP</string>
+    <string name="use_with_email">GỬI MAIL</string>
+    <string name="use_with_vcard">THÊM LIÊN LẠC</string>
+    <string name="use_with_barcode">SAO CHÉP</string>
+
+</resources>

@@ -5,67 +5,61 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.ContactsContract;
 import android.vn.leo.qrscan.data.QRCodeType;
+import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.OnUseCallback;
 
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
+
+import java.util.Date;
+
 public class QRCodeCommon {
-
-    public enum EmailContentType {
-        NONE(0),
-        SEND_TO(1),
-        SUBJECT(2),
-        BODY(3);
-
-        private int value;
-
-        EmailContentType(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
-
 
     /**
      * Get type of QRCode and call back to do something
      * @param result The result text
      * @param callback The callback after get type
      */
-    public static void  getTypeQRCodeToUse(String result, OnUseCallback callback) {
-        QRCodeType type = getType(result);
+    public static void  getTypeQRCodeToUse(ScanResult result, OnUseCallback callback) {
+        QRCodeType type = getType(result.getResult());
 
         switch (type) {
             case TEXT: {
-                callback.useWithText();
-                break;
+                callback.useWithText(result);
+                return;
             }
             case URL: {
-                callback.useWithUrl();
-                break;
+                callback.useWithUrl(result);
+                return;
             }
             case SMS: {
-                callback.useWithSms();
-                break;
+                callback.useWithSms(result);
+                return;
             }
             case CALL: {
-                callback.useWithCall();
-                break;
+                callback.useWithCall(result);
+                return;
             }
             case EMAIL: {
-                callback.useWithEmail();
-                break;
+                callback.useWithEmail(result);
+                return;
             }
             case VCARD: {
-                callback.useWithVCard();
-                break;
+                callback.useWithVCard(result);
+                return;
             }
         }
 
-        callback.useWithNone();
+        callback.useWithNone(result);
     }
 
     /**
@@ -86,19 +80,32 @@ public class QRCodeCommon {
         return QRCodeType.getType(result);
     }
 
-    public static EmailContentType getContentSendMail(String text) {
-        if (text.startsWith("TO:")) {
-            return EmailContentType.SEND_TO;
-        }
-
-        if (text.startsWith("SUB:")) {
-            return EmailContentType.SUBJECT;
-        }
-
-        if (text.startsWith("BODY:")) {
-            return EmailContentType.BODY;
-        }
-
-        return EmailContentType.NONE;
+    public static String getNameOfImage(Date date) {
+        return "code_" + date.getTime() + ".png";
     }
+
+    /*public static Bitmap generateQRCodeImage(String text) {
+        final int BLACK = 0xFF000000;
+        final int WHITE = 0xFFFFFFFF;
+        final int width = 150;
+        final int height = 150;
+        BitMatrix result;
+        try {
+            result = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, width, height, null);
+        } catch (WriterException e) {
+            return null;
+        }
+        int w = result.getWidth();
+        int h = result.getHeight();
+        int[] pixels = new int[w * h];
+        for (int y = 0; y < h; y++) {
+            int offset = y * w;
+            for (int x = 0; x < w; x++) {
+                pixels[offset + x] = result.get(x, y) ? BLACK : WHITE;
+            }
+        }
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        bitmap.setPixels(pixels, 0, width, 0, 0, w, h);
+        return bitmap;
+    }*/
 }

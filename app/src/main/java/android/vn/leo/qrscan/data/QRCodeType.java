@@ -12,7 +12,8 @@ public enum QRCodeType {
     EMAIL(3),
     SMS(4),
     CALL(5),
-    VCARD(6);
+    VCARD(6),
+    BARCODE(7);
 
     private int value;
 
@@ -36,6 +37,7 @@ public enum QRCodeType {
     public static final String CALL_PREFIX = "tel:";
     public static final String VCARD_PREFIX_1 = "BEGIN:VCARD";
     public static final String VCARD_PREFIX_2 = "END:VCARD\n";
+    public static final String VCARD_PREFIX_3 = "END:VCARD";
 
     public static QRCodeType getType(String text) {
 
@@ -69,7 +71,7 @@ public enum QRCodeType {
             return CALL;
         }
 
-        if (text.startsWith(VCARD_PREFIX_1) && text.endsWith(VCARD_PREFIX_2)) {
+        if (text.startsWith(VCARD_PREFIX_1) && (text.endsWith(VCARD_PREFIX_2) || text.endsWith(VCARD_PREFIX_3))) {
             return VCARD;
         }
 

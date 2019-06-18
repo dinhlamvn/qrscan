@@ -26,10 +26,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:gravity="center"
-        android:layout_marginTop="25dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="40dp"
         android:text="@string/scan_description"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse"
-        android:textColor="@color/zxing_status_text" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+        android:textColor="@color/zxing_status_text"
+        android:drawableStart="@drawable/ic_finder"
+        android:drawableEnd="@drawable/ic_finder"
+        android:drawablePadding="3dp"/>
 
 </merge>

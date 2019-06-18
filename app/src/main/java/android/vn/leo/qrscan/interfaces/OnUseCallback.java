@@ -1,20 +1,20 @@
 package android.vn.leo.qrscan.interfaces;
 
-import android.vn.leo.qrscan.data.QRCodeType;
+import android.vn.leo.qrscan.data.ScanResult;
 
 public interface OnUseCallback {
 
-    void useWithNone();
+    void useWithNone(ScanResult scanResult);
 
-    void useWithText();
+    void useWithText(ScanResult scanResult);
 
-    void useWithUrl();
+    void useWithUrl(ScanResult scanResult);
 
-    void useWithSms();
+    void useWithSms(ScanResult scanResult);
 
-    void useWithCall();
+    void useWithCall(ScanResult scanResult);
 
-    void useWithEmail();
+    void useWithEmail(ScanResult scanResult);
 
-    void useWithVCard();
+    void useWithVCard(ScanResult scanResult);
 }

@@ -1,10 +1,16 @@
 package android.vn.leo.qrscan.interfaces;
 
+import android.vn.leo.qrscan.data.ScanResult;
+
+import java.util.List;
+
 public interface DatabaseHelper {
 
-    void read();
+    List<ScanResult> read();
 
-    void write();
+    long insert(ScanResult scanResult);
 
-    void update();
+    boolean update(ScanResult scanResult);
+
+    boolean remove(ScanResult scanResult);
 }

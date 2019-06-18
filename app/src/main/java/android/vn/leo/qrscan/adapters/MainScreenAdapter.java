@@ -18,27 +18,21 @@ public class MainScreenAdapter extends FragmentPagerAdapter {
 
     private List<String> titles = null;
 
-    private ScanFragment mScanFragment;
-
-    private HistoryFragment mHistoryFragment;
+    private Fragment fragment1, fragment2;
 
     public MainScreenAdapter(FragmentManager fm) {
         super(fm);
-        mScanFragment = new ScanFragment();
-        mHistoryFragment = new HistoryFragment();
-    }
-
-    public void attachResultCallback(OnResultCallback onResultCallback) {
-        this.mScanFragment.withResultCallback(onResultCallback);
-    }
-
-    public void attachOnClickItemCallback(OnClickHistoryItemCallback onClickHistoryItemCallback) {
-        this.mHistoryFragment.addClickHistoryItemCallback(onClickHistoryItemCallback);
+        fragment1 = new ScanFragment();
+        fragment2 = new HistoryFragment();
     }
 
     @Override
     public Fragment getItem(int i) {
-        return i == 0 ? mScanFragment : mHistoryFragment;
+        switch (i) {
+            case 0: return fragment1;
+            case 1: return fragment2;
+        }
+        return null;
     }
 
     @Override

@@ -37,9 +37,36 @@ public class LocalStorageManager {
         return preferences.getBoolean(KeyManager.AUTO_CALL_TO_PHONE_NUMBER, false);
     }
 
+    public static void setEnableSound(boolean value) {
+        preferences.edit().putBoolean(KeyManager.ENABLE_SOUND, value).apply();
+    }
+
+    public static boolean isEnableSound() {
+        return preferences.getBoolean(KeyManager.ENABLE_SOUND, false);
+    }
+
+    public static void setEnableVibrate(boolean value) {
+        preferences.edit().putBoolean(KeyManager.ENABLE_VIBRATE, value).apply();
+    }
+
+    public static boolean isEnableVibrate() {
+        return preferences.getBoolean(KeyManager.ENABLE_VIBRATE, false);
+    }
+
+    public static void setEnableSaveCodeImage(boolean value) {
+        preferences.edit().putBoolean(KeyManager.ENABLE_SAVE_CODE_IMAGE, value).apply();
+    }
+
+    public static boolean isEnableSaveCodeImage() {
+        return preferences.getBoolean(KeyManager.ENABLE_SAVE_CODE_IMAGE, true);
+    }
+
     class KeyManager {
-        final static String AUTO_COPY_AFTER_SCAN_KEY = "auto_copy_after_scan";
-        final static String AUTO_OPEN_WEB_BROWSER_KEY = "auto_open_web_browser";
-        final static String AUTO_CALL_TO_PHONE_NUMBER = "auto_call_to_phone_number";
+        static final String AUTO_COPY_AFTER_SCAN_KEY = "setting_auto_copy_after_scan";
+        static final String AUTO_OPEN_WEB_BROWSER_KEY = "setting_auto_open_web_browser";
+        static final String AUTO_CALL_TO_PHONE_NUMBER = "setting_auto_call_to_phone_number";
+        static final String ENABLE_SOUND = "setting_enable_sound";
+        static final String ENABLE_VIBRATE = "setting_enable_vibrate";
+        static final String ENABLE_SAVE_CODE_IMAGE = "setting_enable_save_code";
     }
 }

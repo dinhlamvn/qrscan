@@ -1,6 +1,7 @@
 package android.vn.leo.qrscan;
 
 import android.app.Application;
+import android.vn.leo.qrscan.database.SQLiteHelper;
 import android.vn.leo.qrscan.utils.LocalStorageManager;
 
 public class MainApplication extends Application {
@@ -10,5 +11,7 @@ public class MainApplication extends Application {
         super.onCreate();
 
         LocalStorageManager.init(this);
+
+        SQLiteHelper.init(this);
     }
 }

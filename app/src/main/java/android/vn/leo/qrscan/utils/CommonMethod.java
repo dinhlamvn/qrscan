@@ -32,4 +32,17 @@ public final class CommonMethod {
     public static boolean isNull(Object target) {
         return target == null;
     }
+
+    /**
+     * Check the object is not null
+     * @param target the object
+     * @return true if it not null, else return false
+     */
+    public static boolean isNotNull(Object target) {
+        return target != null;
+    }
+
+    /**
+     * Update resource with default language in device
+     */
 }

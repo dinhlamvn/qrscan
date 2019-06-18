@@ -1,7 +1,15 @@
 <resources>
-    <string name="app_name">QR Scan</string>
+    <string name="app_name">Code Scanner</string>
+    <string name="developer">Lâm Công Đỉnh</string>
+    <string name="developer_contact">dinhlamvn353@gmail.com</string>
+    <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>
 
+    <string name="screen_scan">SCAN</string>
+    <string name="screen_history">HISTORY</string>
     <string name="scan_description">MOVE CAMERA TO CODE</string>
+
+    <!-- Share message send to other user -->
+    <string name="share_message">This is a very good app to scan QRCode and Barcode. You can download it by link below.</string>
 
     <string name="dialog_result_title">Result</string>
     <string name="dialog_result_confirm_1">USE</string>
@@ -15,4 +23,53 @@
     <string name="dialog_button_cancel">Cancel</string>
     <string name="dialog_button_call">Call</string>
 
+    <!-- Resource for menu -->
+    <string name="menu_item_home">Home</string>
+    <string name="menu_item_setting">Setting</string>
+    <string name="menu_item_rate">Rating</string>
+    <string name="menu_item_share">Sharing</string>
+    <string name="menu_item_about">About</string>
+    <string name="menu_item_exit">Exit</string>
+
+
+    <!-- String resource for setting -->
+    <string name="label_checkbox_auto_copy">Auto copy result after scan</string>
+    <string name="label_checkbox_auto_make_call">Auto make a call</string>
+    <string name="label_checkbox_auto_access_to_url">Auto open web browser with url</string>
+    <string name="label_checkbox_save_image_code">Save capture image of code</string>
+    <string name="label_checkbox_enable_sound">Enable sound</string>
+    <string name="label_checkbox_enable_vibrate">Enable vibrate</string>
+
+    <!-- Notify message resource -->
+    <string name="toast_message_accept_setting">Setting saved</string>
+    <string name="toast_message_removed">You are removed one item</string>
+    <string name="toast_message_restored">Restored one item succeed</string>
+
+    <!-- About dialog resource -->
+    <string name="dialog_about_title">Info</string>
+    <string name="dialog_about_message">Application name: %s \nVersion: %s \nDeveloper: %s \nContact: %s</string>
+    <string name="dialog_about_button">OK</string>
+
+    <!-- Confirm dialog message -->
+    <string name="dialog_open_web_web_browser">Web Browser</string>
+    <string name="dialog_call_call">call to phone number</string>
+    <string name="dialog_open_web_confirm_message">Do you want to open %s with the url is: %s ?</string>
+    <string name="dialog_call_confirm_message">Do you want to %s: %s ?</string>
+    
+    <!-- Other resource -->
+    <string name="chose_app_share">CHOSE APP TO SHARE</string>
+    <string name="can_not_save_image">Can not save image</string>
+    <string name="chose_app_send_mail">CHOSE APP TO SEND MAIL</string>
+    <string name="undo_text">UNDO</string>
+    <string name="removed_text">Removed</string>
+    <string name="removed_fail_text">Remove failed</string>
+
+    <!-- Use resource -->
+    <string name="use_with_text">COPY</string>
+    <string name="use_with_call">CALL</string>
+    <string name="use_with_sms">SEND SMS</string>
+    <string name="use_with_url">ACCESS</string>
+    <string name="use_with_email">SEND MAIL</string>
+    <string name="use_with_vcard">ADD CONTACT</string>
+    <string name="use_with_barcode">COPY</string>
 </resources>

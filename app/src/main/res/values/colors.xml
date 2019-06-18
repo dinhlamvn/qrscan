@@ -2,10 +2,24 @@
 <resources>
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#3F51B5</color>
 
     <color name="transparent_blue">#500000ff</color>
 
     <color name="flash_btn_active">#f5f500</color>
-    <color name="flash_btn_not_active">#343434</color>
+    <color name="flash_btn_not_active">#ffffff</color>
+
+    <!-- Background color for date group -->
+    <color name="date_group_background">#e0e0e0</color>
+
+    <!-- Color of text -->
+    <color name="color_text_undo">#efef1e</color>
+
+    <color name="colorActionMode">#273276</color>
+
+    <color name="row_activated">#cecece</color>
+
+    <color name="colorResultText">#9e9e9e</color>
+    <color name="colorTypeText">#343434</color>
+    <color name="colorTimeStamp">#5e35b1</color>
 </resources>
