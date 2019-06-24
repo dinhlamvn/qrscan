@@ -30,38 +30,46 @@ import android.vn.leo.qrscan.BaseActivity;
 import android.vn.leo.qrscan.BuildConfig;
 import android.vn.leo.qrscan.R;
 import android.vn.leo.qrscan.adapters.MainScreenAdapter;
-import android.vn.leo.qrscan.data.qrcode.ContactInfo;
-import android.vn.leo.qrscan.data.QRCodeType;
 import android.vn.leo.qrscan.data.ResultManager;
 import android.vn.leo.qrscan.data.ScanResult;
-import android.vn.leo.qrscan.data.qrcode.QRCodeEmail;
 import android.vn.leo.qrscan.database.SQLiteHelper;
 import android.vn.leo.qrscan.fragments.HistoryFragment;
 import android.vn.leo.qrscan.fragments.ScanFragment;
 import android.vn.leo.qrscan.helper.AlertHelper;
-import android.vn.leo.qrscan.helper.parser.ContactParser;
 import android.vn.leo.qrscan.helper.IntentProviderHelper;
-import android.vn.leo.qrscan.helper.parser.QRCodeEmailParser;
+import android.vn.leo.qrscan.helper.parser.ContentParser;
 import android.vn.leo.qrscan.interfaces.IDialogCallback;
-import android.vn.leo.qrscan.interfaces.IHandleResult;
-import android.vn.leo.qrscan.interfaces.IQRCodeParser;
+import android.vn.leo.qrscan.interfaces.OnExecuteResult;
 import android.vn.leo.qrscan.interfaces.OnAppMenuItemSelected;
-import android.vn.leo.qrscan.interfaces.OnResultCallback;
-import android.vn.leo.qrscan.interfaces.OnUseCallback;
+import android.vn.leo.qrscan.interfaces.OnResult;
+import android.vn.leo.qrscan.interfaces.ResultWorker;
 import android.vn.leo.qrscan.utils.FormatUtility;
 import android.vn.leo.qrscan.utils.LocalStorageManager;
 import android.vn.leo.qrscan.utils.CommonMethod;
-import android.vn.leo.qrscan.utils.QRCodeCommon;
+import android.vn.leo.qrscan.utils.StringUtility;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.zxing.BarcodeFormat;
+import com.google.zxing.Result;
+import com.google.zxing.client.result.AddressBookParsedResult;
 import com.google.zxing.client.result.EmailAddressParsedResult;
-import com.google.zxing.client.result.EmailAddressResultParser;
+import com.google.zxing.client.result.ParsedResult;
+import com.google.zxing.client.result.ParsedResultType;
+import com.google.zxing.client.result.ResultParser;
+import com.google.zxing.client.result.SMSParsedResult;
+import com.google.zxing.client.result.TelParsedResult;
+import com.google.zxing.client.result.TextParsedResult;
+import com.google.zxing.client.result.URIParsedResult;
 import com.journeyapps.barcodescanner.BarcodeResult;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -69,8 +77,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends BaseActivity implements OnResultCallback
-        , OnUseCallback, IHandleResult, OnAppMenuItemSelected {
+public class MainActivity extends BaseActivity implements OnResult
+        , ResultWorker, OnExecuteResult, OnAppMenuItemSelected {
 
     public static final int REQUEST_SETTING_SCREEN = 1100;
 
@@ -78,12 +86,13 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     private MainScreenAdapter pageAdapter;
     private ScanResult scanResult;
     private boolean isHandlingResult = false;
-    private IHandleResult handleResult;
+    private OnExecuteResult handleResult;
 
     private DrawerLayout mDrawerLayout;
     private OnAppMenuItemSelected menuListener;
     private AlertDialog useCodeAlert = null;
     private boolean isDisableHandleResult = false;
+    private ContentParser parser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +110,8 @@ public class MainActivity extends BaseActivity implements OnResultCallback
                 return onDrawerMenuItemSelected(menuItem);
             }
         });
+
+        parser = new ContentParser(this);
 
         handleResult = this;
 
@@ -188,22 +199,6 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_CALL_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startCallPhoneNumber();
-            } else {
-                finishHandleResult();
-            }
-        } else if (requestCode == REQUEST_READ_WRITE_EXTERNAL_STORAGE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                saveCaptureImageCodeToExternalStorage();
-            }
-        }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_SETTING_SCREEN) {
             if (resultCode == RESULT_OK) {
@@ -212,7 +207,7 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         } else if (requestCode == REQUEST_CALL_PHONE || requestCode == REQUEST_SEND_MAIL
                 || requestCode == REQUEST_SEND_SMS || requestCode == REQUEST_WEB_BROWSER
                 || requestCode == REQUEST_ADD_CONTACT) {
-            finishHandleResult();
+            release();
         }
 
         super.onActivityResult(requestCode, resultCode, data);
@@ -224,7 +219,7 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     }
 
     public void setUpViewPager() {
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        mViewPager = findViewById(R.id.view_pager);
         pageAdapter = new MainScreenAdapter(getSupportFragmentManager());
         mViewPager.setAdapter(pageAdapter);
         mViewPager.setOffscreenPageLimit(1);
@@ -232,7 +227,7 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         final List<String> titles = Arrays.asList(
                 getResources().getString(R.string.screen_scan), getResources().getString(R.string.screen_history));
         pageAdapter.withListTitle(titles);
-        final TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        final TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(mViewPager, true);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
@@ -312,15 +307,13 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         closeAppMenu();
     }
 
-    public boolean closeAppMenu() {
+    public void closeAppMenu() {
         if (mDrawerLayout == null) {
-            return false;
+            return;
         }
         if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
             mDrawerLayout.closeDrawer(Gravity.START, true);
-            return true;
         }
-        return false;
     }
 
     public boolean openAppMenu() {
@@ -354,13 +347,9 @@ public class MainActivity extends BaseActivity implements OnResultCallback
 
     @Override
     public void onSharingSelected() {
-        Intent sharedIntent = new Intent(Intent.ACTION_SEND);
-        sharedIntent.setType("text/plain");
-        sharedIntent.putExtra(Intent.EXTRA_SUBJECT, getResources().getString(R.string.app_name));
         String shareMessage = getResources().getString(R.string.share_message) + "\n"
                 + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
-        sharedIntent.putExtra(Intent.EXTRA_TEXT, shareMessage);
-        startActivity(Intent.createChooser(sharedIntent, getResources().getString(R.string.chose_app_share)));
+        CommonMethod.share(this, shareMessage);
         closeAppMenu();
     }
 
@@ -389,17 +378,17 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     }
 
     @Override
-    public boolean isDisableHandel() {
+    public boolean isDisabled() {
         return isDisableHandleResult;
     }
 
     @Override
-    public boolean isHandlingResult() {
+    public boolean isOnResult() {
         return isHandlingResult;
     }
 
     @Override
-    public void finishHandleResult() {
+    public void release() {
         this.scanResult = null;
         isHandlingResult = false;
         this.useCodeAlert = null;
@@ -407,15 +396,12 @@ public class MainActivity extends BaseActivity implements OnResultCallback
 
     @Override
     public void onResult(BarcodeResult result) {
+        ParsedResult parsedResult = ResultParser.parseResult(result.getResult());
         this.isHandlingResult = true;
         this.scanResult = new ScanResult(result.getText(), result.getBitmap());
-        if (result.getBarcodeFormat() == BarcodeFormat.QR_CODE) {
-            this.scanResult.setType(QRCodeType.getType(result.getText()));
-        } else {
-            this.scanResult.setType(QRCodeType.BARCODE);
-        }
+        this.scanResult.setType(parsedResult.getType());
         if (scanResult.getResult() == null || scanResult.getImage() == null) {
-            finishHandleResult();
+            release();
             return;
         }
 
@@ -434,9 +420,10 @@ public class MainActivity extends BaseActivity implements OnResultCallback
 
     @Override
     public void showResult(final ScanResult scanResult) {
-        String title = FormatUtility.convertTypeToString(scanResult.getType());
+        String title = FormatUtility.getTitleResultFromType(this, scanResult.getType());
         String btnUse = FormatUtility.getUseStringFromType(this, scanResult.getType());
         String btnCancel = getString(R.string.dialog_result_confirm_3);
+        String btnShare = getString(R.string.dialog_result_confirm_2);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_image, null);
@@ -460,31 +447,31 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         builder.setPositiveButton(btnUse, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                QRCodeCommon.getTypeQRCodeToUse(scanResult, MainActivity.this);
+                Result result = new Result(scanResult.getResult(), scanResult.getResult().getBytes(), null, null);
+                parser.startParse(result);
             }
         });
 
         builder.setNegativeButton(btnCancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finishHandleResult();
+                release();
             }
         });
 
-        if (scanResult.getType() != QRCodeType.TEXT && scanResult.getType() != QRCodeType.BARCODE) {
-            String btnCopy = getString(R.string.dialog_result_confirm_2);
-            builder.setNeutralButton(btnCopy, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    CommonMethod.copyResultToClipboard(MainActivity.this, scanResult.getResult());
-                }
-            });
-        }
+        builder.setNeutralButton(btnShare, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String result = scanResult.getResult();
+                CommonMethod.share(MainActivity.this, result);
+                release();
+            }
+        });
 
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
-                finishHandleResult();
+                release();
             }
         });
 
@@ -532,6 +519,8 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     public void onPageChange(int position) {
         ScanFragment scanFragment = (ScanFragment) pageAdapter.getItem(0);
         if (position == 0) {
+            HistoryFragment historyFragment = (HistoryFragment) pageAdapter.getItem(1);
+            historyFragment.releaseActionMode();
             isDisableHandleResult = false;
             scanFragment.onResume();
             return;
@@ -541,102 +530,79 @@ public class MainActivity extends BaseActivity implements OnResultCallback
     }
 
     @Override
-    public void useWithNone(final ScanResult scanResult) {
-        Toast.makeText(this, R.string.toast_result_empty, Toast.LENGTH_SHORT).show();
-        finishHandleResult();
-    }
-
-    @Override
-    public void useWithText(final ScanResult scanResult) {
+    public void copyText(final ParsedResult result) {
         CommonMethod.copyResultToClipboard(this, scanResult.getResult());
-        finishHandleResult();
+        release();
     }
 
     @Override
-    public void useWithUrl(final ScanResult scanResult) {
-        this.scanResult = scanResult;
-        boolean isAutoOpenWeb = LocalStorageManager.isAutoOpenWebBrowser();
-
-        if (isAutoOpenWeb) {
-            startWebBrowser();
-            return;
-        }
-        showNoticeOpenWebBrowser();
-    }
-
-    @Override
-    public void useWithSms(final ScanResult scanResult) {
-        String ret = scanResult.getResult();
-        String text = ret.replace(QRCodeType.SMS_PREFIX, "");
-        String[] data = text.split(":");
-        String phone = "";
-        String message = "";
-
-        if (data.length == 1) {
-            phone = data[0];
-        } else if (data.length == 2) {
-            phone = data[0];
-            message = data[1];
-        }
-
-        Uri uri = Uri.parse("sms:" + phone);
+    public void sendSMS(final ParsedResult result) {
+        SMSParsedResult sms = (SMSParsedResult) result;
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
-        intent.setData(uri);
-        intent.putExtra("sms_body", message);
+        intent.setData(Uri.fromParts("sms", StringUtility.getStringListIfNotNullFromArray(sms.getNumbers()), null));
+        intent.putExtra("sms_body", sms.getBody());
         startActivityWithRequestCode(intent, REQUEST_SEND_SMS);
     }
 
     @Override
-    public void useWithCall(final ScanResult scanResult) {
-        this.scanResult = scanResult;
+    public void callPhone(final ParsedResult result) {
+        final TelParsedResult tell = (TelParsedResult) result;
         boolean isAutoCall = LocalStorageManager.isAutoCallToPhoneNumber();
 
         if (isAutoCall) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[] {Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                Dexter.withActivity(this)
+                        .withPermission(Manifest.permission.CALL_PHONE)
+                        .withListener(new PermissionListener() {
+                            @Override
+                            public void onPermissionGranted(PermissionGrantedResponse response) {
+                                startCallPhoneNumber(tell.getTelURI());
+                                release();
+                            }
+
+                            @Override
+                            public void onPermissionDenied(PermissionDeniedResponse response) {
+                                showToast(getResources().getString(R.string.call_permission_denied));
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
             } else {
-                startCallPhoneNumber();
+                startCallPhoneNumber(tell.getTelURI());
             }
             return;
         }
 
-        showNoticeCallToPhoneNumber();
+        showNoticeCallToPhoneNumber(tell.getTelURI());
     }
 
     @Override
-    public void useWithEmail(final ScanResult scanResult) {
-        IQRCodeParser parser = new QRCodeEmailParser();
+    public void sendEmail(final ParsedResult result) {
+        EmailAddressParsedResult email = (EmailAddressParsedResult) result;
 
-        QRCodeEmail email = (QRCodeEmail) parser.parse(scanResult.getResult());
+        Intent intent = new Intent(Intent.ACTION_SEND);
 
-        Intent intent = new Intent();
-
-        // Set action send mail to intent
-        intent.setAction(Intent.ACTION_SENDTO);
-
-        // Set type of content
-        intent.setType("text/plain");
-
-        // Set data uri for intent
-        intent.setData(Uri.parse("mailto:" + email.getReceiver()));
-
-        // Put subject to email
+        intent.putExtra(Intent.EXTRA_EMAIL, email.getTos());
         intent.putExtra(Intent.EXTRA_SUBJECT, email.getSubject());
+        intent.putExtra(Intent.EXTRA_TEXT, email.getBody());
+        intent.putExtra(Intent.EXTRA_CC, email.getCCs());
+        intent.putExtra(Intent.EXTRA_BCC, email.getBCCs());
 
-        // Put the message to email
-        intent.putExtra(Intent.EXTRA_TEXT, email.getContent());
-
-        // Start a chooser intent for activity send mail
-        startActivityWithRequestCode(Intent.createChooser(intent, getResources().getString(R.string.chose_app_send_mail)), REQUEST_SEND_MAIL);
+        startActivityWithRequestCode(intent, REQUEST_SEND_MAIL);
     }
 
     @Override
-    public void useWithVCard(final ScanResult scanResult) {
-        IQRCodeParser parser = new ContactParser();
-        ContactInfo contactInfo = (ContactInfo) parser.parse(scanResult.getResult());
+    public void addNewContact(ParsedResult result) {
+        AddressBookParsedResult contact = (AddressBookParsedResult) result;
+
+        String[] addresses = contact.getAddresses();
+        String[] emails = contact.getEmails();
+        String[] phoneNumbers = contact.getPhoneNumbers();
 
         Intent intent = new Intent(ContactsContract.Intents.Insert.ACTION);
         intent.setType(ContactsContract.RawContacts.CONTENT_TYPE);
@@ -644,41 +610,71 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         // Data list for contact
         ArrayList<ContentValues> data = new ArrayList<>();
 
+        // Phone number
+        intent.putExtra(ContactsContract.Intents.Insert.PHONE,
+                StringUtility.getStringValueIfNotNullFromArray(phoneNumbers, 0));
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE,
+                StringUtility.getStringValueIfNotNullFromArray(phoneNumbers, 1));
+        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE,
+                StringUtility.getStringValueIfNotNullFromArray(phoneNumbers, 2));
+
+        // Email address
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL,
+                StringUtility.getStringValueIfNotNullFromArray(emails, 0));
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_EMAIL,
+                StringUtility.getStringValueIfNotNullFromArray(emails, 1));
+        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_EMAIL,
+                StringUtility.getStringValueIfNotNullFromArray(emails, 2));
+
         // Address
         ContentValues address = new ContentValues();
         address.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredPostal.CONTENT_ITEM_TYPE);
-        address.put(ContactsContract.CommonDataKinds.StructuredPostal.STREET, contactInfo.getAddress().getStreet());
-        address.put(ContactsContract.CommonDataKinds.StructuredPostal.CITY, contactInfo.getAddress().getCity());
-        address.put(ContactsContract.CommonDataKinds.StructuredPostal.POSTCODE, contactInfo.getAddress().getPostcode());
-        address.put(ContactsContract.CommonDataKinds.StructuredPostal.REGION, contactInfo.getAddress().getState());
-        address.put(ContactsContract.CommonDataKinds.StructuredPostal.COUNTRY, contactInfo.getAddress().getCountry());
+        address.put(ContactsContract.CommonDataKinds.StructuredPostal.STREET, StringUtility.getStringValueIfNotNullFromArray(addresses, 0));
         address.put(ContactsContract.CommonDataKinds.StructuredPostal.TYPE, ContactsContract.CommonDataKinds.StructuredPostal.TYPE_WORK);
         data.add(address);
 
-        // Address
+        // Website address
         ContentValues website = new ContentValues();
         website.put(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Website.CONTENT_ITEM_TYPE);
-        website.put(ContactsContract.CommonDataKinds.Website.URL, contactInfo.getWebsite());
+        website.put(ContactsContract.CommonDataKinds.Website.URL, StringUtility.getStringListIfNotNullFromArray(contact.getURLs()));
         data.add(website);
 
-        // Put data to intent
+        // Contact name
         intent.putExtra(ContactsContract.Intents.Insert.NAME,
-                contactInfo.getFullName());
-        intent.putExtra(ContactsContract.Intents.Insert.PHONE, contactInfo.getMobileNumber());
-        intent.putExtra(ContactsContract.Intents.Insert.EMAIL, contactInfo.getMailAddress());
-        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, contactInfo.getCompany());
-        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, contactInfo.getJob());
-        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE, contactInfo.getPhoneNumber());
-        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE, contactInfo.getFaxNumber());
+                StringUtility.getStringValueIfNotNullFromArray(contact.getNames(), 0));
+
+        // Put data to intent
+        intent.putExtra(ContactsContract.Intents.Insert.COMPANY, contact.getOrg());
+        intent.putExtra(ContactsContract.Intents.Insert.JOB_TITLE, contact.getTitle());
         intent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, data);
+        intent.putExtra(ContactsContract.Intents.Insert.NOTES, StringUtility.getStringValueIfNotNull(contact.getNote()));
 
         // Set type for data
         intent.putExtra(ContactsContract.Intents.Insert.PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_WORK);
-        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_FAX_WORK);
-        intent.putExtra(ContactsContract.Intents.Insert.EMAIL_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK);
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_HOME);
+        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_PHONE_TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_WORK);
+        intent.putExtra(ContactsContract.Intents.Insert.EMAIL_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_MOBILE);
+        intent.putExtra(ContactsContract.Intents.Insert.SECONDARY_EMAIL_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_HOME);
+        intent.putExtra(ContactsContract.Intents.Insert.TERTIARY_EMAIL_TYPE, ContactsContract.CommonDataKinds.Email.TYPE_WORK);
 
         startActivityWithRequestCode(intent, REQUEST_ADD_CONTACT);
+    }
+
+    @Override
+    public void accessUri(final ParsedResult result) {
+        URIParsedResult uri = (URIParsedResult) result;
+        boolean isAutoOpenWeb = LocalStorageManager.isAutoOpenWebBrowser();
+
+        if (isAutoOpenWeb) {
+            startWebBrowser(uri.getURI());
+            return;
+        }
+        showNoticeOpenWebBrowser(uri.getURI());
+    }
+
+    @Override
+    public void accessWifi(ParsedResult result) {
+
     }
 
     public void saveCaptureImageCodeToExternalStorage() {
@@ -690,20 +686,20 @@ public class MainActivity extends BaseActivity implements OnResultCallback
         }
     }
 
-    private void startWebBrowser() {
-        Intent intent = IntentProviderHelper.provideIntent(Intent.ACTION_VIEW, Uri.parse(scanResult.getResult()));
+    private void startWebBrowser(String uri) {
+        Intent intent = IntentProviderHelper.provideIntent(Intent.ACTION_VIEW, Uri.parse(uri));
         startActivityWithRequestCode(intent, REQUEST_WEB_BROWSER);
     }
 
-    private void startCallPhoneNumber() {
-        Intent intent = IntentProviderHelper.provideIntent(Intent.ACTION_CALL, Uri.parse(scanResult.getResult()));
+    private void startCallPhoneNumber(String telUri) {
+        Intent intent = IntentProviderHelper.provideIntent(Intent.ACTION_CALL, Uri.parse(telUri));
         startActivityWithRequestCode(intent, REQUEST_CALL_PHONE);
     }
 
-    private void showNoticeOpenWebBrowser() {
+    private void showNoticeOpenWebBrowser(final String uri) {
 
         String webBrowser = "<b>" + getResources().getString(R.string.dialog_open_web_web_browser) + "</b>";
-        String result = "<b><u>" + scanResult.getResult() + "</u></b>";
+        String result = "<b><u>" + uri + "</u></b>";
 
         String title = getString(R.string.dialog_notice_title);
         String message = String.format(getResources().getString(R.string.dialog_open_web_confirm_message), webBrowser, result);
@@ -718,12 +714,12 @@ public class MainActivity extends BaseActivity implements OnResultCallback
                 title, null, new IDialogCallback() {
                     @Override
                     public void onAction1() {
-                        startWebBrowser();
+                        startWebBrowser(uri);
                     }
 
                     @Override
                     public void onAction2() {
-                        finishHandleResult();
+                        release();
                     }
 
                     @Override
@@ -733,12 +729,12 @@ public class MainActivity extends BaseActivity implements OnResultCallback
 
                     @Override
                     public void onActionCancel() {
-                        finishHandleResult();
+                        release();
                     }
                 }, true, view , btnOpen, btnCancel);
     }
 
-    private void showNoticeCallToPhoneNumber() {
+    private void showNoticeCallToPhoneNumber(final String telUri) {
         String ret = scanResult.getResult();
         String phoneNumber = ret.substring(ret.indexOf(":") + 1);
 
@@ -759,13 +755,13 @@ public class MainActivity extends BaseActivity implements OnResultCallback
                             ActivityCompat.requestPermissions(MainActivity.this,
                                     new String[] {Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
                         } else {
-                            startCallPhoneNumber();
+                            startCallPhoneNumber(telUri);
                         }
                     }
 
                     @Override
                     public void onAction2() {
-                        finishHandleResult();
+                        release();
                     }
 
                     @Override
@@ -775,7 +771,7 @@ public class MainActivity extends BaseActivity implements OnResultCallback
 
                     @Override
                     public void onActionCancel() {
-                        finishHandleResult();
+                        release();
                     }
                 }, true, null , btnCall, btnCancel);
     }

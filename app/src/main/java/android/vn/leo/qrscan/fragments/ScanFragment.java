@@ -5,15 +5,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.vn.leo.qrscan.R;
-import android.vn.leo.qrscan.activities.MainActivity;
-import android.vn.leo.qrscan.data.ScanResult;
-import android.vn.leo.qrscan.interfaces.OnResultCallback;
+import android.vn.leo.qrscan.interfaces.OnResult;
 
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -29,7 +26,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     private boolean isFlashOn = false;
     private FloatingActionButton btnFlash;
 
-    private OnResultCallback resultCallback;
+    private OnResult resultCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,7 +53,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        this.resultCallback = (OnResultCallback) getActivity();
+        this.resultCallback = (OnResult) getActivity();
     }
 
     @Override
@@ -64,7 +61,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
         if (this.resultCallback == null) {
             return;
         }
-        if (this.resultCallback.isHandlingResult()) {
+        if (this.resultCallback.isOnResult()) {
             return;
         }
         this.resultCallback.onResult(result);
@@ -88,7 +85,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     @Override
     public void onResume() {
         if (mDecoratedBarcodeView != null &&
-                this.resultCallback != null && !this.resultCallback.isDisableHandel()) {
+                this.resultCallback != null && !this.resultCallback.isDisabled()) {
             mDecoratedBarcodeView.resume();
         }
         super.onResume();

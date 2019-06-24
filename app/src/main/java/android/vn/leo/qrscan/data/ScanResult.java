@@ -1,32 +1,32 @@
 package android.vn.leo.qrscan.data;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.vn.leo.qrscan.utils.QRCodeCommon;
+
+import com.google.zxing.client.result.ParsedResultType;
 
 import java.io.Serializable;
 import java.util.Date;
 
 public class ScanResult implements Serializable {
 
-    int id;
+    private int id;
     private String result;
     private Bitmap image;
     private Date date;
-    private QRCodeType type;
+    private ParsedResultType type;
 
     public ScanResult() {
         this.result = "";
         this.image = null;
         this.date = new Date();
-        this.type = QRCodeType.NONE;
+        this.type = ParsedResultType.TEXT;
     }
 
     public ScanResult(String result, Bitmap image) {
         this.result = result;
         this.image = image;
         this.date = new Date();
-        this.type = QRCodeType.NONE;
+        this.type = ParsedResultType.TEXT;
     }
 
     public void setId(int id) {
@@ -61,11 +61,11 @@ public class ScanResult implements Serializable {
         this.date = date;
     }
 
-    public QRCodeType getType() {
+    public ParsedResultType getType() {
         return type;
     }
 
-    public void setType(QRCodeType type) {
+    public void setType(ParsedResultType type) {
         this.type = type;
     }
 }

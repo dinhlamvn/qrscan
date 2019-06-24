@@ -9,12 +9,17 @@
     <string name="screen_history">LỊCH SỬ</string>
     <string name="scan_description">DI CHUYỂN CAMERA ĐẾN MÃ</string>
 
+    <!-- Resource for setting screen -->
+    <string name="setting_title_auto">Tự động</string>
+    <string name="setting_title_storage">Bộ nhớ</string>
+    <string name="setting_title_others">Khác</string>
+
     <!-- Share message send to other user -->
     <string name="share_message">Đây là một ứng dụng quét QRCode và Barcode rất tốt. Bạn có thể tải nó bằng link bên dưới.</string>
 
     <string name="dialog_result_title">Kết quả</string>
     <string name="dialog_result_confirm_1">SỬ DỤNG</string>
-    <string name="dialog_result_confirm_2">SAO CHÉP</string>
+    <string name="dialog_result_confirm_2">CHIA SẺ</string>
     <string name="dialog_result_confirm_3">HỦY</string>
 
     <string name="toast_result_empty">Kết quả trống</string>
@@ -35,7 +40,7 @@
 
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Tự động sao chép kết quả sau khi quét</string>
-    <string name="label_checkbox_auto_make_call">Tự động thực hiện cuộc gọi</string>
+    <string name="label_checkbox_auto_make_call">Tự động thực hiện cuộc gọi với QRCode cuộc gọi</string>
     <string name="label_checkbox_auto_access_to_url">Tự động mở trình duyệt Web với URL quét được</string>
     <string name="label_checkbox_save_image_code">Lưu ảnh chụp của mã được quét</string>
     <string name="label_checkbox_enable_sound">Bật âm thanh</string>
@@ -44,6 +49,7 @@
     <!-- Notify message resource -->
     <string name="toast_message_accept_setting">Cài đặt được lưu lại</string>
     <string name="toast_message_removed">Bạn vừa xóa một kết quả</string>
+    <string name="toast_message_removed_n">Bạn vừa xóa xxx kết quả</string>
     <string name="toast_message_restored">Khôi phục kết quả xóa thành công</string>
 
     <!-- About dialog resource -->
@@ -65,13 +71,26 @@
     <string name="removed_text">Đã xóa</string>
     <string name="removed_fail_text">Xóa thất bại</string>
 
+    <!-- Title resource -->
+    <string name="title_with_text">VĂN BẢN</string>
+    <string name="title_with_call">CUỘC GỌI</string>
+    <string name="title_with_sms">TIN NHẮN</string>
+    <string name="title_with_url">ĐỊA CHỈ WEB</string>
+    <string name="title_with_email">EMAIL</string>
+    <string name="title_with_vcard">DANH BẠ</string>
+    <string name="title_with_barcode">SẢN PHẨM</string>
+    <string name="title_with_wifi">MẠNG WIFI</string>
+
     <!-- Use resource -->
     <string name="use_with_text">SAO CHÉP</string>
-    <string name="use_with_call">CUỘC GỌI</string>
-    <string name="use_with_sms">GỬI TIN NHẮN</string>
+    <string name="use_with_call">GỌI</string>
+    <string name="use_with_sms">GỬI</string>
     <string name="use_with_url">TRUY CẬP</string>
-    <string name="use_with_email">GỬI MAIL</string>
-    <string name="use_with_vcard">THÊM LIÊN LẠC</string>
-    <string name="use_with_barcode">SAO CHÉP</string>
+    <string name="use_with_email">GỬI</string>
+    <string name="use_with_vcard">THÊM</string>
+    <string name="use_with_wifi">KẾT NỐI</string>
+    <string name="use_with_product">TRA CỨU</string>
 
+    <!-- Permission notify text -->
+    <string name="call_permission_denied">Bạn nên cho app quyền thực hiện cuộc gọi</string>
 </resources>

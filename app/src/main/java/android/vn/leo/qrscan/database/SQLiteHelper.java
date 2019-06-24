@@ -7,12 +7,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.vn.leo.qrscan.data.QRCodeType;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.DatabaseHelper;
+import android.vn.leo.qrscan.utils.CommonMethod;
 import android.vn.leo.qrscan.utils.DateDescComparator;
 import android.vn.leo.qrscan.utils.LocalStorageManager;
-import android.vn.leo.qrscan.utils.QRCodeCommon;
+
+import com.google.zxing.client.result.ParsedResultType;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -75,7 +76,7 @@ public class SQLiteHelper extends SQLiteOpenHelper implements DatabaseHelper {
                 Bitmap bitmap = getImageFromFileName(cursor.getString(cursor.getColumnIndex("image")));
                 String code = cursor.getString(cursor.getColumnIndex("code"));
                 Date date = new Date(Long.parseLong(cursor.getString(cursor.getColumnIndex("date"))));
-                QRCodeType type = QRCodeType.values()[cursor.getInt(cursor.getColumnIndex("type"))];
+                ParsedResultType type = ParsedResultType.values()[cursor.getInt(cursor.getColumnIndex("type"))];
                 scanResult.setId(id);
                 scanResult.setResult(code);
                 scanResult.setImage(bitmap);
@@ -106,10 +107,10 @@ public class SQLiteHelper extends SQLiteOpenHelper implements DatabaseHelper {
 
         ContentValues contentValues = new ContentValues();
         contentValues.put("image", LocalStorageManager.isEnableSaveCodeImage() ?
-                QRCodeCommon.getNameOfImage(scanResult.getDate()) : "");
+                CommonMethod.getNameOfImage(scanResult.getDate()) : "");
         contentValues.put("code", scanResult.getResult());
         contentValues.put("date", String.valueOf(scanResult.getDate().getTime()));
-        contentValues.put("type", scanResult.getType().getValue());
+        contentValues.put("type", CommonMethod.getIndexOfType(scanResult.getType().toString()));
 
         long i = db.insert(TABLE_NAME, null, contentValues);
 
@@ -123,10 +124,10 @@ public class SQLiteHelper extends SQLiteOpenHelper implements DatabaseHelper {
         SQLiteDatabase db = getWritableDatabase();
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("image", QRCodeCommon.getNameOfImage(scanResult.getDate()));
+        contentValues.put("image", CommonMethod.getNameOfImage(scanResult.getDate()));
         contentValues.put("code", scanResult.getResult());
         contentValues.put("date", String.valueOf(scanResult.getDate().getTime()));
-        contentValues.put("type", scanResult.getType().getValue());
+        contentValues.put("type", scanResult.getType().toString());
 
         long i = db.update(TABLE_NAME, contentValues, "id=?", new String[]{String.valueOf(scanResult.getId())});
 

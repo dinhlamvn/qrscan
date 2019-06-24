@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.vn.leo.qrscan.fragments.HistoryFragment;
 import android.vn.leo.qrscan.fragments.ScanFragment;
-import android.vn.leo.qrscan.interfaces.OnClickHistoryItemCallback;
-import android.vn.leo.qrscan.interfaces.OnResultCallback;
 
 import java.util.List;
 

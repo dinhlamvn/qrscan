@@ -2,7 +2,8 @@ package android.vn.leo.qrscan.utils;
 
 import android.content.Context;
 import android.vn.leo.qrscan.R;
-import android.vn.leo.qrscan.data.QRCodeType;
+
+import com.google.zxing.client.result.ParsedResultType;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,24 +12,20 @@ import java.util.Locale;
 
 public final class FormatUtility {
 
-    /**
-     * Convert type of code to string
-     * @param type The type of code
-     * @return The value of type in string, but not found any type for code, return empty string
-     */
-    public static String convertTypeToString(QRCodeType type) {
+    public static String getTitleResultFromType(Context context, ParsedResultType type) {
         switch (type) {
-            case NONE: return "";
-            case TEXT: return "Text";
-            case CALL: return "Call";
-            case SMS: return "SMS";
-            case URL: return "URL";
-            case EMAIL: return "Email";
-            case VCARD: return "Contact";
-            case BARCODE: return "Barcode";
-            default: return "";
+            case TEXT: return context.getResources().getString(R.string.title_with_text);
+            case SMS: return context.getResources().getString(R.string.title_with_sms);
+            case TEL: return context.getResources().getString(R.string.title_with_call);
+            case URI: return context.getResources().getString(R.string.title_with_url);
+            case EMAIL_ADDRESS: return context.getResources().getString(R.string.title_with_email);
+            case ADDRESSBOOK: return context.getResources().getString(R.string.title_with_vcard);
+            case PRODUCT: return context.getResources().getString(R.string.title_with_barcode);
+            case WIFI: return context.getResources().getString(R.string.title_with_wifi);
+            default: return context.getResources().getString(R.string.dialog_result_title);
         }
     }
+
 
     /**
      * Get action string with type of code
@@ -36,16 +33,16 @@ public final class FormatUtility {
      * @param type The type of code
      * @return The action string of code, if not found for type, return <b>USE</b>
      */
-    public static String getUseStringFromType(Context context, QRCodeType type) {
+    public static String getUseStringFromType(Context context, ParsedResultType type) {
         switch (type) {
-            case NONE: return "";
             case TEXT: return context.getResources().getString(R.string.use_with_text);
             case SMS: return context.getResources().getString(R.string.use_with_sms);
-            case CALL: return context.getResources().getString(R.string.use_with_call);
-            case URL: return context.getResources().getString(R.string.use_with_url);
-            case EMAIL: return context.getResources().getString(R.string.use_with_email);
-            case VCARD: return context.getResources().getString(R.string.use_with_vcard);
-            case BARCODE: return context.getResources().getString(R.string.use_with_barcode);
+            case TEL: return context.getResources().getString(R.string.use_with_call);
+            case URI: return context.getResources().getString(R.string.use_with_url);
+            case EMAIL_ADDRESS: return context.getResources().getString(R.string.use_with_email);
+            case ADDRESSBOOK: return context.getResources().getString(R.string.use_with_vcard);
+            case PRODUCT: return context.getResources().getString(R.string.use_with_product);
+            case WIFI: return context.getResources().getString(R.string.use_with_wifi);
             default: return context.getResources().getString(R.string.dialog_result_confirm_1);
         }
     }

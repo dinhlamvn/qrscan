@@ -34,9 +34,11 @@ import android.vn.leo.qrscan.data.ResultManager;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.database.SQLiteHelper;
 import android.vn.leo.qrscan.interfaces.OnClickHistoryItemCallback;
+import android.vn.leo.qrscan.utils.CommonMethod;
 import android.vn.leo.qrscan.utils.Const;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HistoryFragment extends Fragment implements OnClickHistoryItemCallback {
@@ -99,6 +101,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
 
         final RecyclerView recyclerView = view.findViewById(R.id.history_recycler_view);
         recyclerView.setHasFixedSize(true);
+        recyclerView.setTag("recycler_view");
         mAdapter = new HistoryAdapter(this);
         recyclerView.setAdapter(mAdapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(mActivity, LinearLayoutManager.VERTICAL));
@@ -147,6 +150,44 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         });
     }
 
+    @Override
+    public void onListItemRemoveConfirm(final List<Integer> positions, final HistoryAdapter.OnChangeCallback onChangeCallback) {
+        mActivity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final List<ScanResult> selected = mAdapter.getListItemSelected();
+                for (int i : positions) {
+                    ResultManager.getInstance().remove(i);
+                    mAdapter.notifyItemRemoved(i);
+                }
+                releaseActionMode();
+                final Handler handler = new Handler();
+                final Runnable listRemove = new ListRemoveResult(selected);
+                handler.postDelayed(listRemove, Const.TIME_TO_REMOVE_RESULT);
+                String message = getResources().getString(R.string.toast_message_removed_n);
+                message = message.replace("xxx", String.valueOf(positions.size()));
+                snackbar = Snackbar.make(mActivity.findViewById(R.id.view_pager), message, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(getResources().getString(R.string.undo_text), new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                boolean isRestored = false;
+                                int c = 0;
+                                for (int position : positions) {
+                                    isRestored = ResultManager.getInstance().add(position, selected.get(c));
+                                    c++;
+                                }
+                                if (isRestored) {
+                                    Toast.makeText(mActivity, R.string.toast_message_restored, Toast.LENGTH_SHORT).show();
+                                    onChangeCallback.onChange();
+                                    handler.removeCallbacks(listRemove);
+                                }
+                            }
+                        }).setActionTextColor(ContextCompat.getColor(mActivity, R.color.color_text_undo));
+                snackbar.show();
+            }
+        });
+    }
+
     class RemoveResult implements Runnable {
 
         final ScanResult result;
@@ -157,6 +198,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
 
         @Override
         public void run() {
+            hideSnackbar();
             String image = "code_" + result.getDate().getTime() + ".png";
             mActivity.deleteFile(image);
             boolean isRemoved = SQLiteHelper.getInstance().remove(result);
@@ -165,13 +207,58 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
             } else {
                 showToast(getResources().getString(R.string.removed_fail_text));
             }
+        }
+    }
+
+    class ListRemoveResult implements Runnable {
+
+        final List<ScanResult> results;
+
+        ListRemoveResult(final List<ScanResult> result) {
+            this.results = result;
+        }
+
+        @Override
+        public void run() {
             hideSnackbar();
+            boolean isAllRemoved = true;
+            int count = 0;
+            for (ScanResult result : results) {
+                String image = "code_" + result.getDate().getTime() + ".png";
+                mActivity.deleteFile(image);
+                boolean isRemoved = SQLiteHelper.getInstance().remove(result);
+                if (isRemoved) {
+                    count++;
+                } else {
+                    isAllRemoved = false;
+                    break;
+                }
+            }
+
+            if (isAllRemoved) {
+                String s = getResources().getString(R.string.removed_text) + " " + count;
+                showToast(s);
+            } else {
+                if (count > 0) {
+                    String s = getResources().getString(R.string.removed_text) + " " + count;
+                    showToast(s);
+                } else {
+                    showToast(getResources().getString(R.string.removed_fail_text));
+                }
+            }
         }
     }
 
     public void hideSnackbar() {
         if (snackbar != null && snackbar.isShown()) {
             snackbar.dismiss();
+        }
+    }
+
+    public void releaseActionMode() {
+        if (mActionMode != null) {
+            mActionMode.finish();
+            mActionMode = null;
         }
     }
 
@@ -192,6 +279,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
 
         if (selectedItemCount == 0) {
             mActionMode.finish();
+            mActionMode = null;
         } else {
             mActionMode.setTitle(String.valueOf(mAdapter.getItemSelectedCount()));
             mActionMode.invalidate();
@@ -219,6 +307,19 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         }
     }
 
+    public void onShareList() {
+        List<ScanResult> selected = mAdapter.getListItemSelected();
+        List<String> strings = new ArrayList<>();
+
+        for (ScanResult result : selected) {
+            strings.add(result.getResult());
+        }
+
+        if (getContext() != null) {
+            CommonMethod.share(getContext(), strings);
+        }
+    }
+
     class ActionModeCallback implements ActionMode.Callback {
 
         @Override
@@ -237,7 +338,11 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete: {
-                    //mActivity.showToast("Delete");
+                    mAdapter.onListDelete();
+                    return true;
+                }
+                case R.id.action_share: {
+                    onShareList();
                     return true;
                 }
             }

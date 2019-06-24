@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.vn.leo.qrscan.adapters.HistoryAdapter;
 import android.vn.leo.qrscan.data.ScanResult;
 
+import java.util.List;
+
 public interface OnClickHistoryItemCallback {
 
     /**
@@ -24,4 +26,11 @@ public interface OnClickHistoryItemCallback {
      * @param position the position of item
      */
     void onLongClickItem(int position);
+
+    /**
+     * Callback function when user delete list item in action mode of history screen
+     * @param positions The position of item
+     * @param onChangeCallback Callback when user restore
+     */
+    void onListItemRemoveConfirm(List<Integer> positions, HistoryAdapter.OnChangeCallback onChangeCallback);
 }

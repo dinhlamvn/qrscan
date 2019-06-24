@@ -3,7 +3,7 @@ package android.vn.leo.qrscan.interfaces;
 import android.graphics.Bitmap;
 import android.vn.leo.qrscan.data.ScanResult;
 
-public interface IHandleResult {
+public interface OnExecuteResult {
 
     /**
      * Show alert dialog with result text and image of QRCode or Barcode user scan

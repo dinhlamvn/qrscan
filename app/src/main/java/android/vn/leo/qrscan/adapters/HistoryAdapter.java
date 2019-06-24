@@ -15,6 +15,7 @@ import android.vn.leo.qrscan.data.ResultManager;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.OnClickHistoryItemCallback;
 import android.vn.leo.qrscan.utils.FormatUtility;
+import android.vn.leo.qrscan.utils.StringUtility;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -89,6 +90,22 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onItemMoved(int start, int end) {
 
+    }
+
+    public void onListDelete() {
+        int size = getItemSelectedCount();
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            int p = selectedItems.keyAt(i);
+            list.add(p);
+        }
+
+        clickHistoryItemCallback.onListItemRemoveConfirm(list, new OnChangeCallback() {
+            @Override
+            public void onChange() {
+                notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -181,13 +198,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(itemView.getContext())
                     .load(item.getImage())
                     .error(R.drawable.no_image)
-                    .transform(new RoundedCorners(16))
+                    .transform(new RoundedCorners(32))
                     .skipMemoryCache(false)
                     .into(imgScan);
             txtResult.setEllipsize(TextUtils.TruncateAt.END);
             txtResult.setText(result);
             txtDateScan.setText(scanDate);
-            txtType.setText(FormatUtility.convertTypeToString(item.getType()));
+            txtType.setText(FormatUtility.getTitleResultFromType(itemView.getContext(), item.getType()));
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
@@ -236,13 +253,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             Glide.with(itemView.getContext())
                     .load(item.getImage())
                     .error(R.drawable.no_image)
-                    .transform(new RoundedCorners(16))
+                    .transform(new RoundedCorners(32))
                     .skipMemoryCache(false)
                     .into(imgScan);
             txtResult.setEllipsize(TextUtils.TruncateAt.END);
             txtResult.setText(result);
             txtDateScan.setText(scanDate);
-            txtType.setText(FormatUtility.convertTypeToString(item.getType()));
+            txtType.setText(FormatUtility.getTitleResultFromType(itemView.getContext(), item.getType()));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
