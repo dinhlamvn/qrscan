@@ -1,5 +1,6 @@
 package android.vn.leo.qrscan.helper.parser;
 
+import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.IResultParser;
 import android.vn.leo.qrscan.interfaces.ResultWorker;
 
@@ -15,8 +16,8 @@ public class ContentParser {
         this.resultWorker = resultWorker;
     }
 
-    public void startParse(Result result) {
-        ParsedResultType type = ResultParser.parseResult(result).getType();
+    public void startParse(ScanResult result) {
+        ParsedResultType type = result.getType();
         IResultParser parser = null;
         switch (type) {
             case ADDRESSBOOK: {
@@ -53,7 +54,8 @@ public class ContentParser {
             }
         }
         if (parser != null) {
-            parser.parse(result, this.resultWorker);
+            Result result1 = new Result(result.getResult(), null, null, null);
+            parser.parse(result1, this.resultWorker);
         }
     }
 }

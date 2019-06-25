@@ -32,5 +32,5 @@ public interface OnClickHistoryItemCallback {
      * @param positions The position of item
      * @param onChangeCallback Callback when user restore
      */
-    void onListItemRemoveConfirm(List<Integer> positions, HistoryAdapter.OnChangeCallback onChangeCallback);
+    void onListItemRemoveConfirm(HistoryAdapter.OnChangeCallback onChangeCallback);
 }

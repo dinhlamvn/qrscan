@@ -1,17 +1,22 @@
 package android.vn.leo.qrscan.data;
 
+import android.support.annotation.Nullable;
 import android.vn.leo.qrscan.utils.CommonMethod;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
+import java.util.TreeMap;
 
 public class ResultManager {
 
     private final List<ScanResult> resultList;
-    private final List<ScanResult> removedList;
+    private final TreeMap<Integer, ScanResult> removedList;
 
     private static ResultManager instance;
 
@@ -24,7 +29,7 @@ public class ResultManager {
 
     private ResultManager() {
         resultList = new ArrayList<>();
-        removedList = new ArrayList<>();
+        removedList = new TreeMap<>();
     }
 
     public void add(final ScanResult result) {
@@ -50,22 +55,42 @@ public class ResultManager {
         return null;
     }
 
-    public void addRemoveItem(ScanResult it) {
-        removedList.add(it);
+    public boolean remove(ScanResult item) {
+        return this.resultList.size() > 0 && this.resultList.contains(item) && this.resultList.remove(item);
     }
 
-    public void clearItemInRemoved(ScanResult it) {
-        removedList.remove(it);
+    public void addRemoveItem(int position, ScanResult it) {
+        removedList.put(position, it);
+    }
+
+    public void clearItemInRemoved(int key) {
+        if (this.removedList.size() > 0 && this.removedList.containsKey(key)) {
+            removedList.remove(key);
+        }
     }
 
     public int currentSizeOfRemovedList() {
         return removedList.size();
     }
 
-    public List<ScanResult> getRemovedList() {
-        List<ScanResult> out = new ArrayList<>(removedList);
-        removedList.clear();
-        return out;
+    @Nullable
+    public ScanResult getRemovedItem(int key) {
+        if (key >= 0 && this.removedList.containsKey(key)) {
+            return this.removedList.get(key);
+        }
+        return null;
+    }
+
+    public Set<Integer> getPositionRemovedList() {
+        return this.removedList.keySet();
+    }
+
+    public Collection<ScanResult> getRemovedList() {
+        return this.removedList.values();
+    }
+
+    public void releaseRemoveList() {
+        this.removedList.clear();
     }
 
     public void addAll(List<ScanResult> list) {

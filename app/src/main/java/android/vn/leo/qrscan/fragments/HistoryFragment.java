@@ -21,6 +21,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -40,6 +41,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class HistoryFragment extends Fragment implements OnClickHistoryItemCallback {
 
@@ -119,7 +121,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
             mActivity.showResult(ResultManager.getInstance().get(position));
             return;
         }
-        toggleSelection(position);
+        toggleSelection(false, position);
     }
 
     @Override
@@ -127,7 +129,8 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                toggleSelection(position);
+                toggleSelection(false, position);
+                mAdapter.notifyItemRemoved(position);
                 final Handler handler = new Handler();
                 final Runnable removeRunnable = new RemoveResult(item);
                 handler.postDelayed(removeRunnable, Const.TIME_TO_REMOVE_RESULT);
@@ -151,33 +154,27 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     }
 
     @Override
-    public void onListItemRemoveConfirm(final List<Integer> positions, final HistoryAdapter.OnChangeCallback onChangeCallback) {
+    public void onListItemRemoveConfirm(final HistoryAdapter.OnChangeCallback onChangeCallback) {
+        final Handler handler = new Handler();
+        final int size = ResultManager.getInstance().currentSizeOfRemovedList();
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final List<ScanResult> selected = mAdapter.getListItemSelected();
-                for (int i : positions) {
-                    ResultManager.getInstance().remove(i);
-                    mAdapter.notifyItemRemoved(i);
-                }
-                releaseActionMode();
-                final Handler handler = new Handler();
-                final Runnable listRemove = new ListRemoveResult(selected);
+                clearListItems();
+                final Runnable listRemove = new ListRemoveResult();
                 handler.postDelayed(listRemove, Const.TIME_TO_REMOVE_RESULT);
-                String message = getResources().getString(R.string.toast_message_removed_n);
-                message = message.replace("xxx", String.valueOf(positions.size()));
+                String message = getResources().getString(R.string.toast_message_removed_list);
+                message = message.replace("xxx", String.valueOf(size));
                 snackbar = Snackbar.make(mActivity.findViewById(R.id.view_pager), message, Snackbar.LENGTH_INDEFINITE)
                         .setAction(getResources().getString(R.string.undo_text), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                boolean isRestored = false;
-                                int c = 0;
-                                for (int position : positions) {
-                                    isRestored = ResultManager.getInstance().add(position, selected.get(c));
-                                    c++;
-                                }
-                                if (isRestored) {
-                                    Toast.makeText(mActivity, R.string.toast_message_restored, Toast.LENGTH_SHORT).show();
+                                int itemCounts = restoreItems();
+                                ResultManager.getInstance().releaseRemoveList();
+                                if (itemCounts > 0) {
+                                    String rmvMessage = getResources().getString(R.string.toast_message_restored_list);
+                                    rmvMessage = rmvMessage.replace("xxx", String.valueOf(itemCounts));
+                                    Toast.makeText(mActivity, rmvMessage, Toast.LENGTH_SHORT).show();
                                     onChangeCallback.onChange();
                                     handler.removeCallbacks(listRemove);
                                 }
@@ -186,6 +183,31 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
                 snackbar.show();
             }
         });
+    }
+
+    public void clearListItems() {
+        Set<Integer> keys = ResultManager.getInstance().getPositionRemovedList();
+        for (int key : keys) {
+            ScanResult result = ResultManager.getInstance().getRemovedItem(key);
+            if (result != null) {
+                ResultManager.getInstance().remove(result);
+            }
+        }
+        mAdapter.notifyDataSetChanged();
+        releaseActionMode();
+    }
+
+    public int restoreItems() {
+        Set<Integer> keys = ResultManager.getInstance().getPositionRemovedList();
+        int count = 0;
+        for (int i : keys) {
+            ScanResult result = ResultManager.getInstance().getRemovedItem(i);
+            if (result != null) {
+                ResultManager.getInstance().add(i, result);
+            }
+            count++;
+        }
+        return count;
     }
 
     class RemoveResult implements Runnable {
@@ -212,10 +234,10 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
 
     class ListRemoveResult implements Runnable {
 
-        final List<ScanResult> results;
+        final List<ScanResult> results = new ArrayList<>();
 
-        ListRemoveResult(final List<ScanResult> result) {
-            this.results = result;
+        ListRemoveResult() {
+            this.results.addAll(ResultManager.getInstance().getRemovedList());
         }
 
         @Override
@@ -234,7 +256,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
                     break;
                 }
             }
-
+            ResultManager.getInstance().releaseRemoveList();
             if (isAllRemoved) {
                 String s = getResources().getString(R.string.removed_text) + " " + count;
                 showToast(s);
@@ -267,14 +289,20 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         if (mActionMode == null) {
             mActionMode = mActivity.startSupportActionMode(actionModeCallback);
         }
-        toggleSelection(position);
+        toggleSelection(true, position);
     }
 
-    public void toggleSelection(int position) {
+    public void toggleSelection(boolean isLongClick, int position) {
         if (mActionMode == null) {
             return;
         }
-        mAdapter.toggleSelection(position);
+
+        if (isLongClick) {
+            mAdapter.toggleLongClickSelection(position);
+        } else {
+            mAdapter.toggleSelection(position);
+        }
+
         int selectedItemCount = mAdapter.getSelectedItemCount();
 
         if (selectedItemCount == 0) {
@@ -308,7 +336,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     }
 
     public void onShareList() {
-        List<ScanResult> selected = mAdapter.getListItemSelected();
+        List<ScanResult> selected = new ArrayList<>(ResultManager.getInstance().getRemovedList());
         List<String> strings = new ArrayList<>();
 
         for (ScanResult result : selected) {
@@ -338,7 +366,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.action_delete: {
-                    mAdapter.onListDelete();
+                    mAdapter.onListDeleted();
                     return true;
                 }
                 case R.id.action_share: {

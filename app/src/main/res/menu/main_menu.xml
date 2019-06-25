@@ -1,31 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tool="http://schemas.android.com/tools"
-    tool:context=".activities.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/home_btn"
-        android:title="@string/menu_item_home"
-        android:icon="@drawable/ic_home_black"/>
-
-    <item android:id="@+id/setting_btn"
-        android:title="@string/menu_item_setting"
-        android:icon="@drawable/ic_setting_black"/>
-
-    <item android:id="@+id/rate_btn"
-        android:title="@string/menu_item_rate"
-        android:icon="@drawable/ic_like_black"/>
-
-    <item android:id="@+id/share_btn"
-        android:title="@string/menu_item_share"
-        android:icon="@drawable/ic_share_black"/>
-
-    <item android:id="@+id/about_btn"
-        android:title="@string/menu_item_about"
-        android:icon="@drawable/ic_about_black"/>
-
-    <item android:id="@+id/exit_btn"
-        android:title="@string/menu_item_exit"
-        android:icon="@drawable/ic_exit_black"/>
+    <item android:id="@+id/btn_flash"
+        android:title="Flash"
+        android:icon="@drawable/ic_flash_off_24dp"
+        app:showAsAction="ifRoom" />
 
 </menu>

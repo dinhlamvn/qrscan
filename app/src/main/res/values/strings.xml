@@ -48,8 +48,9 @@
     <!-- Notify message resource -->
     <string name="toast_message_accept_setting">Setting saved</string>
     <string name="toast_message_removed">You are removed one item</string>
-    <string name="toast_message_removed_n">You are removed xxx item</string>
+    <string name="toast_message_removed_list">You are removed xxx item</string>
     <string name="toast_message_restored">Restored one item succeed</string>
+    <string name="toast_message_restored_list">Restored xxx item succeed</string>
 
     <!-- About dialog resource -->
     <string name="dialog_about_title">Info</string>
@@ -92,4 +93,8 @@
 
     <!-- Permission notify text -->
     <string name="call_permission_denied">You should allow app make the call phone</string>
+
+    <!-- Flash text -->
+    <string name="light_flash_on">Light Flash On</string>
+    <string name="light_flash_off">Light Flash Off</string>
 </resources>

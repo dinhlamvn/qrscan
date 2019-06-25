@@ -6,6 +6,16 @@ import android.vn.leo.qrscan.data.ScanResult;
 public interface OnExecuteResult {
 
     /**
+     * Vibrate the device if user turn on feature from setting
+     */
+    void vibrate();
+
+    /**
+     * Sound the device if user turn on feature from setting
+     */
+    void sound();
+
+    /**
      * Show alert dialog with result text and image of QRCode or Barcode user scan
      * @param scanResult Result of code
      */

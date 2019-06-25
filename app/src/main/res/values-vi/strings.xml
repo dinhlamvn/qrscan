@@ -49,7 +49,7 @@
     <!-- Notify message resource -->
     <string name="toast_message_accept_setting">Cài đặt được lưu lại</string>
     <string name="toast_message_removed">Bạn vừa xóa một kết quả</string>
-    <string name="toast_message_removed_n">Bạn vừa xóa xxx kết quả</string>
+    <string name="toast_message_removed_list">Bạn vừa xóa xxx kết quả</string>
     <string name="toast_message_restored">Khôi phục kết quả xóa thành công</string>
 
     <!-- About dialog resource -->
@@ -93,4 +93,8 @@
 
     <!-- Permission notify text -->
     <string name="call_permission_denied">Bạn nên cho app quyền thực hiện cuộc gọi</string>
+
+    <!-- Flash text -->
+    <string name="light_flash_on">Bật đèn</string>
+    <string name="light_flash_off">Tắt đèn</string>
 </resources>

@@ -5,4 +5,6 @@ public interface OnItemSwipedOrMovedCallback {
     void onItemSwiped(int position);
 
     void onItemMoved(int start, int end);
+
+    void onListDeleted();
 }

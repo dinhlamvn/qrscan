@@ -7,7 +7,11 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +28,7 @@ import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.vn.leo.qrscan.BaseActivity;
@@ -43,6 +48,7 @@ import android.vn.leo.qrscan.interfaces.OnExecuteResult;
 import android.vn.leo.qrscan.interfaces.OnAppMenuItemSelected;
 import android.vn.leo.qrscan.interfaces.OnResult;
 import android.vn.leo.qrscan.interfaces.ResultWorker;
+import android.vn.leo.qrscan.utils.Const;
 import android.vn.leo.qrscan.utils.FormatUtility;
 import android.vn.leo.qrscan.utils.LocalStorageManager;
 import android.vn.leo.qrscan.utils.CommonMethod;
@@ -57,7 +63,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.result.AddressBookParsedResult;
 import com.google.zxing.client.result.EmailAddressParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ParsedResultType;
+import com.google.zxing.client.result.ProductParsedResult;
 import com.google.zxing.client.result.ResultParser;
 import com.google.zxing.client.result.SMSParsedResult;
 import com.google.zxing.client.result.TelParsedResult;
@@ -276,7 +282,9 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        return super.onCreateOptionsMenu(menu);
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -284,10 +292,10 @@ public class MainActivity extends BaseActivity implements OnResult
         switch (item.getItemId()) {
             case android.R.id.home: {
                 openOrCloseAppMenu();
-                break;
+                return true;
             }
         }
-        return super.onOptionsItemSelected(item);
+        return false;
     }
 
     private void openOrCloseAppMenu() {
@@ -405,6 +413,12 @@ public class MainActivity extends BaseActivity implements OnResult
             return;
         }
 
+        // Vibrate device
+        handleResult.vibrate();
+
+        // Play the sound
+        handleResult.sound();
+
         // Show alert dialog with result
         handleResult.showResult(scanResult);
 
@@ -416,6 +430,33 @@ public class MainActivity extends BaseActivity implements OnResult
 
         // Update to database
         handleResult.saveResultToDatabase(scanResult);
+    }
+
+    @Override
+    public void vibrate() {
+        boolean isVibrateEnabled = LocalStorageManager.isEnableVibrate();
+
+        if (isVibrateEnabled) {
+            Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+
+            if (CommonMethod.isNotNull(vibrator)) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    vibrator.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    vibrator.vibrate(500);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void sound() {
+        boolean isSoundEnabled = LocalStorageManager.isEnableSound();
+
+        if (isSoundEnabled) {
+            final MediaPlayer player = MediaPlayer.create(this, R.raw.beep);
+            player.start();
+        }
     }
 
     @Override
@@ -447,8 +488,7 @@ public class MainActivity extends BaseActivity implements OnResult
         builder.setPositiveButton(btnUse, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Result result = new Result(scanResult.getResult(), scanResult.getResult().getBytes(), null, null);
-                parser.startParse(result);
+                parser.startParse(scanResult);
             }
         });
 
@@ -675,6 +715,15 @@ public class MainActivity extends BaseActivity implements OnResult
     @Override
     public void accessWifi(ParsedResult result) {
 
+    }
+
+    @Override
+    public void researchProduct(ParsedResult result) {
+        TextParsedResult text = (TextParsedResult) result;
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(Const.PRODUCT_RESEARCH_URL + text.getText()));
+        startActivityWithRequestCode(intent, REQUEST_WEB_BROWSER);
     }
 
     public void saveCaptureImageCodeToExternalStorage() {

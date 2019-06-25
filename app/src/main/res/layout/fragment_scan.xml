@@ -11,16 +11,6 @@
         app:zxing_scanner_layout="@layout/custom_scanner">
     </com.journeyapps.barcodescanner.DecoratedBarcodeView>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/flash_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_flash"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        app:backgroundTint="#ffffff"
-        app:fabSize="normal"/>
     <FrameLayout
         android:background="@drawable/qr_frame"
         android:layout_width="259dp"

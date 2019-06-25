@@ -69,7 +69,10 @@ public final class CommonMethod {
         StringBuilder sb = new StringBuilder();
 
         for (String str : strings) {
-            sb.append(str).append("\n").append("-----------------").append("\n");
+            sb.append(str)
+                    .append("\n")
+                    .append("+----------------------------------------------------+")
+                    .append("\n");
         }
 
         Intent sharedIntent = new Intent(Intent.ACTION_SEND);

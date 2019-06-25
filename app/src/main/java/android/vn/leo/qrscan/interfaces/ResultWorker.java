@@ -19,4 +19,6 @@ public interface ResultWorker {
     void accessUri(ParsedResult result);
 
     void accessWifi(ParsedResult result);
+
+    void researchProduct(ParsedResult result);
 }

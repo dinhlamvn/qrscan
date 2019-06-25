@@ -7,10 +7,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.vn.leo.qrscan.R;
 import android.vn.leo.qrscan.interfaces.OnResult;
+import android.widget.Toast;
 
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
@@ -20,17 +24,17 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import java.util.List;
 
 public class ScanFragment extends Fragment implements DecoratedBarcodeView.TorchListener,
-        BarcodeCallback, View.OnClickListener, View.OnKeyListener {
+        BarcodeCallback, View.OnKeyListener {
 
     private DecoratedBarcodeView mDecoratedBarcodeView;
     private boolean isFlashOn = false;
-    private FloatingActionButton btnFlash;
 
     private OnResult resultCallback;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Nullable
@@ -38,14 +42,11 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_scan, container, false);
 
-        mDecoratedBarcodeView = (DecoratedBarcodeView) view.findViewById(R.id.zxing_barcode_scanner);
+        mDecoratedBarcodeView = view.findViewById(R.id.zxing_barcode_scanner);
 
         mDecoratedBarcodeView.decodeContinuous(this);
         mDecoratedBarcodeView.setTorchListener(this);
         mDecoratedBarcodeView.setOnKeyListener(this);
-
-        btnFlash = (FloatingActionButton) view.findViewById(R.id.flash_btn);
-        btnFlash.setOnClickListener(this);
 
         return view;
     }
@@ -57,6 +58,36 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.btn_flash: {
+                onFlash();
+                if (isFlashOn) {
+                    item.setIcon(R.drawable.ic_flash_on_24dp);
+                } else {
+                    item.setIcon(R.drawable.ic_flash_off_24dp);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void onFlash() {
+        isFlashOn = !isFlashOn;
+        if (isFlashOn) {
+            mDecoratedBarcodeView.setTorchOn();
+        } else {
+            mDecoratedBarcodeView.setTorchOff();
+        }
+    }
+
+    @Override
     public void barcodeResult(BarcodeResult result) {
         if (this.resultCallback == null) {
             return;
@@ -65,16 +96,6 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
             return;
         }
         this.resultCallback.onResult(result);
-    }
-
-    @Override
-    public void onClick(View v) {
-        isFlashOn = !isFlashOn;
-        if (isFlashOn) {
-            mDecoratedBarcodeView.setTorchOn();
-        } else {
-            mDecoratedBarcodeView.setTorchOff();
-        }
     }
 
     @Override
@@ -119,11 +140,11 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
 
     @Override
     public void onTorchOn() {
-        btnFlash.setBackgroundTintList(getResources().getColorStateList(R.color.flash_btn_active));
+        Toast.makeText(getContext(), getResources().getString(R.string.light_flash_on), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onTorchOff() {
-        btnFlash.setBackgroundTintList(getResources().getColorStateList(R.color.flash_btn_not_active));
+        Toast.makeText(getContext(), getResources().getString(R.string.light_flash_off), Toast.LENGTH_SHORT).show();
     }
 }

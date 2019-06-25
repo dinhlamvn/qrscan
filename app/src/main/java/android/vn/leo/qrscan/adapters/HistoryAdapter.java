@@ -92,15 +92,9 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    public void onListDelete() {
-        int size = getItemSelectedCount();
-        List<Integer> list = new ArrayList<>();
-        for (int i = 0; i < size; i++) {
-            int p = selectedItems.keyAt(i);
-            list.add(p);
-        }
-
-        clickHistoryItemCallback.onListItemRemoveConfirm(list, new OnChangeCallback() {
+    @Override
+    public void onListDeleted() {
+        clickHistoryItemCallback.onListItemRemoveConfirm(new OnChangeCallback() {
             @Override
             public void onChange() {
                 notifyDataSetChanged();
@@ -111,7 +105,6 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onItemSwiped(final int position) {
         final ScanResult result = ResultManager.getInstance().remove(position);
-        notifyItemRemoved(position);
         clickHistoryItemCallback.onItemRemoveConfirm(position, result, new OnChangeCallback() {
             @Override
             public void onChange() {
@@ -129,23 +122,16 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return ResultManager.getInstance().size();
     }
 
+
+    public SparseBooleanArray getSelectedItems() {
+        return selectedItems;
+    }
+
     /**
      * Count of item was selected
      */
     public int getSelectedItemCount() {
         return selectedItems.size();
-    }
-
-    /**
-     * Get list of item was selected
-     */
-    public List<ScanResult> getListItemSelected() {
-        List<ScanResult> outs = new ArrayList<>();
-        for (int i = 0; i < getItemSelectedCount(); i++) {
-            ScanResult it = ResultManager.getInstance().get(selectedItems.keyAt(i));
-            outs.add(it);
-        }
-        return outs;
     }
 
     /**
@@ -161,12 +147,43 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
      * @param position The position of item
      */
     public void toggleSelection(int position) {
+        ScanResult result = ResultManager.getInstance().get(position);
         if (selectedItems.get(position, false)) {
             selectedItems.delete(position);
+            ResultManager.getInstance().clearItemInRemoved(position);
         } else {
             selectedItems.put(position, true);
+            ResultManager.getInstance().addRemoveItem(position, result);
         }
         notifyItemChanged(position);
+    }
+
+    public void toggleLongClickSelection(int position) {
+        toggleSelection(position);
+        int min = position - 1;
+        int max = position + 1;
+
+        while (min >= 0) {
+            if (selectedItems.get(min, false)) break;
+            min--;
+        }
+
+        while (max < getItemCount()) {
+            if (selectedItems.get(max, false)) break;
+            max++;
+        }
+
+        if (min >= 0) {
+            for (int i = position - 1; i > min; i--) {
+                toggleSelection(i);
+            }
+        }
+
+        if (max < getItemCount()) {
+            for (int i = position + 1; i < max; i++) {
+                toggleSelection(i);
+            }
+        }
     }
 
     /**
