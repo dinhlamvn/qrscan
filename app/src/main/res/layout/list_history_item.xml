@@ -59,4 +59,13 @@
 
     </LinearLayout>
 
+    <ImageView
+        android:id="@+id/iconCopy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_copy"
+        android:layout_gravity="end|bottom"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"/>
+
 </FrameLayout>

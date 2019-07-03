@@ -14,6 +14,7 @@ import android.vn.leo.qrscan.R;
 import android.vn.leo.qrscan.data.ResultManager;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.OnClickHistoryItemCallback;
+import android.vn.leo.qrscan.utils.CommonMethod;
 import android.vn.leo.qrscan.utils.FormatUtility;
 import android.vn.leo.qrscan.utils.StringUtility;
 import android.widget.ImageView;
@@ -199,6 +200,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         TextView txtResult;
         TextView txtDateScan;
         TextView txtType;
+        ImageView imgCopy;
 
         HistoryViewHolder(View itemView) {
             super(itemView);
@@ -206,6 +208,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtResult = itemView.findViewById(R.id.result_text);
             txtDateScan = itemView.findViewById(R.id.timestamp);
             txtType = itemView.findViewById(R.id.text_type);
+            imgCopy = itemView.findViewById(R.id.iconCopy);
         }
 
         void bind(final ScanResult item) {
@@ -241,16 +244,25 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                     }
                 }
             });
+
+            imgCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonMethod.copyResultToClipboard(itemView.getContext(), item.getResult());
+                }
+            });
         }
     }
 
     class HistoryWithDateGroupViewHolder extends RecyclerView.ViewHolder {
 
+        ImageView imgCopy;
         TextView textDateGroup;
         ImageView imgScan;
         TextView txtResult;
         TextView txtDateScan;
         TextView txtType;
+
 
         HistoryWithDateGroupViewHolder(View itemView) {
             super(itemView);
@@ -259,6 +271,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             txtResult = itemView.findViewById(R.id.result_text);
             txtDateScan = itemView.findViewById(R.id.timestamp);
             txtType = itemView.findViewById(R.id.text_type);
+            imgCopy = itemView.findViewById(R.id.iconCopy);
         }
 
         void bind(final ScanResult item) {
@@ -294,6 +307,13 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                         clickHistoryItemCallback.onLongClickItem(getAdapterPosition());
                     }
                     return true;
+                }
+            });
+
+            imgCopy.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CommonMethod.copyResultToClipboard(itemView.getContext(), item.getResult());
                 }
             });
         }

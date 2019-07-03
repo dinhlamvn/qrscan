@@ -40,8 +40,8 @@
 
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Tự động sao chép kết quả sau khi quét</string>
-    <string name="label_checkbox_auto_make_call">Tự động thực hiện cuộc gọi với QRCode cuộc gọi</string>
-    <string name="label_checkbox_auto_access_to_url">Tự động mở trình duyệt Web với URL quét được</string>
+    <string name="label_checkbox_auto_make_call">Xác nhận khi sử dụng QRCode gọi điện</string>
+    <string name="label_checkbox_auto_access_to_url">Xác nhận khi sử dụng QRCode truy cập Web</string>
     <string name="label_checkbox_save_image_code">Lưu ảnh chụp của mã được quét</string>
     <string name="label_checkbox_enable_sound">Bật âm thanh</string>
     <string name="label_checkbox_enable_vibrate">Bật run</string>
@@ -51,6 +51,8 @@
     <string name="toast_message_removed">Bạn vừa xóa một kết quả</string>
     <string name="toast_message_removed_list">Bạn vừa xóa xxx kết quả</string>
     <string name="toast_message_restored">Khôi phục kết quả xóa thành công</string>
+    <string name="toast_message_restored_list">Khôi phục xxx kết quả thành công</string>
+    <string name="toast_message_copied">Đã sao chép vào khay nhớ tạm…!!</string>
 
     <!-- About dialog resource -->
     <string name="dialog_about_title">Thông tin</string>

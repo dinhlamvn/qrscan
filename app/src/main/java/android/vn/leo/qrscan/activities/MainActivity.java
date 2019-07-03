@@ -716,6 +716,7 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public void accessWifi(ParsedResult result) {
+        release();
         WifiParsedResult wifi = (WifiParsedResult) result;
 
         String wifiSSID = wifi.getSsid();

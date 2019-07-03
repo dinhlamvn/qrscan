@@ -28,7 +28,8 @@ public final class CommonMethod {
         if (clipboardManager != null) {
             ClipData clipData = ClipData.newPlainText("result", result);
             clipboardManager.setPrimaryClip(clipData);
-            Toast.makeText(context, "Copied to clipboard...!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getString(R.string.toast_message_copied),
+                    Toast.LENGTH_SHORT).show();
         }
     }
 

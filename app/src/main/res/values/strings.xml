@@ -39,8 +39,8 @@
 
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Auto copy result after scan</string>
-    <string name="label_checkbox_auto_make_call">Auto make a call with CALL QRCode</string>
-    <string name="label_checkbox_auto_access_to_url">Auto open web browser with URL QRCode</string>
+    <string name="label_checkbox_auto_make_call">Confirm when use QRCode call phone</string>
+    <string name="label_checkbox_auto_access_to_url">Confirm when use QRCode access Web</string>
     <string name="label_checkbox_save_image_code">Save capture image of code</string>
     <string name="label_checkbox_enable_sound">Enable sound</string>
     <string name="label_checkbox_enable_vibrate">Enable vibrate</string>
@@ -51,6 +51,7 @@
     <string name="toast_message_removed_list">You are removed xxx item</string>
     <string name="toast_message_restored">Restored one item succeed</string>
     <string name="toast_message_restored_list">Restored xxx item succeed</string>
+    <string name="toast_message_copied">Copied to clipboard…!!</string>
 
     <!-- About dialog resource -->
     <string name="dialog_about_title">Info</string>
