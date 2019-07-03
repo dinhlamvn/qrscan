@@ -97,4 +97,8 @@
     <!-- Flash text -->
     <string name="light_flash_on">Light Flash On</string>
     <string name="light_flash_off">Light Flash Off</string>
+
+    <!-- Wifi text -->
+    <string name="wifi_connect_toast">Wifi started connect to %s</string>
+    <string name="enable_wifi_toast">Enable wifi</string>
 </resources>

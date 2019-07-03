@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -59,16 +61,16 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.zxing.Result;
 import com.google.zxing.client.result.AddressBookParsedResult;
 import com.google.zxing.client.result.EmailAddressParsedResult;
 import com.google.zxing.client.result.ParsedResult;
-import com.google.zxing.client.result.ProductParsedResult;
 import com.google.zxing.client.result.ResultParser;
 import com.google.zxing.client.result.SMSParsedResult;
 import com.google.zxing.client.result.TelParsedResult;
 import com.google.zxing.client.result.TextParsedResult;
 import com.google.zxing.client.result.URIParsedResult;
+import com.google.zxing.client.result.WifiParsedResult;
+import com.google.zxing.client.result.WifiResultParser;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -545,7 +547,7 @@ public class MainActivity extends BaseActivity implements OnResult
             } else {
                 ActivityCompat.requestPermissions(this,
                         new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_READ_WRITE_EXTERNAL_STORAGE);
+                        REQUEST_EXTERNAL_STORAGE_PERMISSION);
             }
         }
         scanResult.setId((int) SQLiteHelper.getInstance().insert(scanResult));
@@ -714,7 +716,67 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public void accessWifi(ParsedResult result) {
+        WifiParsedResult wifi = (WifiParsedResult) result;
 
+        String wifiSSID = wifi.getSsid();
+        String wifiPass = wifi.getPassword();
+        String wifiType = wifi.getNetworkEncryption();
+
+        WifiConfiguration conf = new WifiConfiguration();
+        conf.SSID = String.format("\"%s\"", wifiSSID);
+
+        if ("WEP".equals(wifiType)) {
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            conf.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN);
+            conf.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            if (wifiPass.matches("^[0-9a-fA-F]+$")) {
+                conf.wepKeys[0] = wifiPass;
+            } else {
+                conf.wepKeys[0] = String.format("\"%s\"", wifiPass);
+            }
+        } else if (wifiType.toUpperCase().contains("WPA")) {
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+            conf.preSharedKey = String.format("\"%s\"", wifiPass);
+        } else {
+            conf.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.RSN);
+            conf.allowedProtocols.set(WifiConfiguration.Protocol.WPA);
+            conf.allowedAuthAlgorithms.clear();
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP);
+            conf.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
+            conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
+        }
+
+        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        assert wifiManager != null;
+        if (!wifiManager.isWifiEnabled()) {
+            showToast(getResources().getString(R.string.enable_wifi_toast));
+            wifiManager.setWifiEnabled(true);
+        }
+        int netId = wifiManager.addNetwork(conf);
+        wifiManager.disconnect();
+        wifiManager.enableNetwork(netId, true);
+        wifiManager.reconnect();
+        String toast = String.format(getResources().getString(R.string.wifi_connect_toast),
+                wifiSSID);
+        showToast(toast);
     }
 
     @Override

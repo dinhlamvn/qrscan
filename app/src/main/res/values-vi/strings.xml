@@ -97,4 +97,8 @@
     <!-- Flash text -->
     <string name="light_flash_on">Bật đèn</string>
     <string name="light_flash_off">Tắt đèn</string>
+
+    <!-- Wifi text -->
+    <string name="wifi_connect_toast">Wifi bắt đầu kết nối đến %s</string>
+    <string name="enable_wifi_toast">Bật wifi</string>
 </resources>

@@ -15,7 +15,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected static final int REQUEST_CAMERA_PERMISSION = 1000;
     protected static final int REQUEST_CALL_PERMISSION = 1001;
-    protected static final int REQUEST_READ_WRITE_EXTERNAL_STORAGE = 1003;
+    protected static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 1003;
 
     public static final int REQUEST_CALL_PHONE = 1111;
     public static final int REQUEST_WEB_BROWSER = 1112;
