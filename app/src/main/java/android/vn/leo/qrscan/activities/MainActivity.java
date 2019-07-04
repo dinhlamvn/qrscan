@@ -73,10 +73,12 @@ import com.google.zxing.client.result.WifiParsedResult;
 import com.google.zxing.client.result.WifiResultParser;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionDeniedResponse;
 import com.karumi.dexter.listener.PermissionGrantedResponse;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.FileOutputStream;
@@ -172,13 +174,26 @@ public class MainActivity extends BaseActivity implements OnResult
     @Override
     protected void onResume() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                            Manifest.permission.READ_EXTERNAL_STORAGE},
-                    REQUEST_CAMERA_PERMISSION);
+                != PackageManager.PERMISSION_GRANTED) {
+
+            Dexter.withActivity(this)
+                    .withPermission(Manifest.permission.CAMERA)
+                    .withListener(new PermissionListener() {
+                        @Override
+                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                            showToast(getResources().getString(R.string.permission_camera_allow));
+                        }
+
+                        @Override
+                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                            showToast(getResources().getString(R.string.permission_camera_denied));
+                        }
+
+                        @Override
+                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                            token.continuePermissionRequest();
+                        }
+                    }).check();
         }
         super.onResume();
     }
@@ -406,14 +421,22 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public void onResult(BarcodeResult result) {
-        ParsedResult parsedResult = ResultParser.parseResult(result.getResult());
         this.isHandlingResult = true;
-        this.scanResult = new ScanResult(result.getText(), result.getBitmap());
-        this.scanResult.setType(parsedResult.getType());
-        if (scanResult.getResult() == null || scanResult.getImage() == null) {
+        ParsedResult parsedResult = ResultParser.parseResult(result.getResult());
+
+        if (parsedResult == null || parsedResult.getDisplayResult().isEmpty()) {
             release();
             return;
         }
+
+        boolean isCaptureImage = LocalStorageManager.isEnableSaveCodeImage();
+
+        if (isCaptureImage) {
+            this.scanResult = new ScanResult(result.getText(), result.getBitmap());
+        } else {
+            this.scanResult = new ScanResult(result.getText(), null);
+        }
+        this.scanResult.setType(parsedResult.getType());
 
         // Vibrate device
         handleResult.vibrate();
@@ -421,9 +444,17 @@ public class MainActivity extends BaseActivity implements OnResult
         // Play the sound
         handleResult.sound();
 
-        // Show alert dialog with result
-        handleResult.showResult(scanResult);
+        // Check the setting of user for auto use result after scanned was on/off
+        boolean isAutoUseResult = LocalStorageManager.isAutoUseAfterScan();
 
+        if (isAutoUseResult) {
+            // Call the request use that code if user turn on auto use feature
+            parser.startParse(scanResult);
+        } else {
+            // If user turn off auto use feature, please show a result dialog to notify
+            // Show alert dialog with result
+            handleResult.showResult(scanResult);
+        }
         // Copy result to clipboard
         handleResult.copyResult(scanResult);
 
@@ -465,7 +496,7 @@ public class MainActivity extends BaseActivity implements OnResult
     public void showResult(final ScanResult scanResult) {
         String title = FormatUtility.getTitleResultFromType(this, scanResult.getType());
         String btnUse = FormatUtility.getUseStringFromType(this, scanResult.getType());
-        String btnCancel = getString(R.string.dialog_result_confirm_3);
+        String btnCopy = getString(R.string.dialog_result_confirm_3);
         String btnShare = getString(R.string.dialog_result_confirm_2);
 
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -494,9 +525,10 @@ public class MainActivity extends BaseActivity implements OnResult
             }
         });
 
-        builder.setNegativeButton(btnCancel, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(btnCopy, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                CommonMethod.copyResultToClipboard(MainActivity.this, scanResult.getResult());
                 release();
             }
         });
@@ -543,11 +575,27 @@ public class MainActivity extends BaseActivity implements OnResult
         boolean isSaveImage = LocalStorageManager.isEnableSaveCodeImage();
         if (isSaveImage) {
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
-                saveCaptureImageCodeToExternalStorage();
+                saveCaptureImageCodeToExternalStorage(scanResult);
             } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE},
-                        REQUEST_EXTERNAL_STORAGE_PERMISSION);
+                Dexter.withActivity(this)
+                        .withPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                        .withListener(new MultiplePermissionsListener() {
+                            @Override
+                            public void onPermissionsChecked(MultiplePermissionsReport report) {
+                                if (report.areAllPermissionsGranted()) {
+                                    showToast(getResources().getString(R.string.permission_storage_allow));
+                                    saveCaptureImageCodeToExternalStorage(scanResult);
+                                } else {
+                                    showToast(getResources().getString(R.string.permission_storage_denied));
+                                }
+                            }
+
+                            @Override
+                            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {
+                                token.continuePermissionRequest();
+                            }
+                        }).check();
             }
         }
         scanResult.setId((int) SQLiteHelper.getInstance().insert(scanResult));
@@ -601,12 +649,12 @@ public class MainActivity extends BaseActivity implements OnResult
                             @Override
                             public void onPermissionGranted(PermissionGrantedResponse response) {
                                 startCallPhoneNumber(tell.getTelURI());
-                                release();
                             }
 
                             @Override
                             public void onPermissionDenied(PermissionDeniedResponse response) {
-                                showToast(getResources().getString(R.string.call_permission_denied));
+                                showToast(getResources().getString(R.string.permission_call_denied));
+                                release();
                             }
 
                             @Override
@@ -789,7 +837,7 @@ public class MainActivity extends BaseActivity implements OnResult
         startActivityWithRequestCode(intent, REQUEST_WEB_BROWSER);
     }
 
-    public void saveCaptureImageCodeToExternalStorage() {
+    public void saveCaptureImageCodeToExternalStorage(final ScanResult scanResult) {
         String fileName = "code_" + scanResult.getDate().getTime() + ".png";
         try (FileOutputStream out = openFileOutput(fileName, MODE_PRIVATE)) {
             scanResult.getImage().compress(Bitmap.CompressFormat.PNG, 80, out);
@@ -836,7 +884,7 @@ public class MainActivity extends BaseActivity implements OnResult
 
                     @Override
                     public void onAction3() {
-
+                        release();
                     }
 
                     @Override
@@ -864,8 +912,25 @@ public class MainActivity extends BaseActivity implements OnResult
                     public void onAction1() {
                         if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE)
                                 != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(MainActivity.this,
-                                    new String[] {Manifest.permission.CALL_PHONE}, REQUEST_CALL_PERMISSION);
+                            Dexter.withActivity(MainActivity.this)
+                                    .withPermission(Manifest.permission.CALL_PHONE)
+                                    .withListener(new PermissionListener() {
+                                        @Override
+                                        public void onPermissionGranted(PermissionGrantedResponse response) {
+                                            startCallPhoneNumber(telUri);
+                                        }
+
+                                        @Override
+                                        public void onPermissionDenied(PermissionDeniedResponse response) {
+                                            showToast(getResources().getString(R.string.permission_call_denied));
+                                            release();
+                                        }
+
+                                        @Override
+                                        public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
+                                            token.continuePermissionRequest();
+                                        }
+                                    }).check();
                         } else {
                             startCallPhoneNumber(telUri);
                         }
@@ -878,7 +943,7 @@ public class MainActivity extends BaseActivity implements OnResult
 
                     @Override
                     public void onAction3() {
-
+                        release();
                     }
 
                     @Override

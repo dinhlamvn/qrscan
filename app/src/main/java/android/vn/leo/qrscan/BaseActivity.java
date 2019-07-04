@@ -13,10 +13,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    protected static final int REQUEST_CAMERA_PERMISSION = 1000;
-    protected static final int REQUEST_CALL_PERMISSION = 1001;
-    protected static final int REQUEST_EXTERNAL_STORAGE_PERMISSION = 1003;
-
     public static final int REQUEST_CALL_PHONE = 1111;
     public static final int REQUEST_WEB_BROWSER = 1112;
     public static final int REQUEST_SEND_MAIL = 1113;

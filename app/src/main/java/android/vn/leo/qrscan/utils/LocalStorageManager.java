@@ -13,6 +13,14 @@ public class LocalStorageManager {
         preferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
     }
 
+    public static void setAutoUseAfterScan(boolean value) {
+        preferences.edit().putBoolean(KeyManager.AUTO_USE_RESULT, value).apply();
+    }
+
+    public static boolean isAutoUseAfterScan() {
+        return preferences.getBoolean(KeyManager.AUTO_USE_RESULT, false);
+    }
+
     public static void setAutoCopyAfterScan(boolean value) {
         preferences.edit().putBoolean(KeyManager.AUTO_COPY_AFTER_SCAN_KEY, value).apply();
     }
@@ -58,10 +66,11 @@ public class LocalStorageManager {
     }
 
     public static boolean isEnableSaveCodeImage() {
-        return preferences.getBoolean(KeyManager.ENABLE_SAVE_CODE_IMAGE, true);
+        return preferences.getBoolean(KeyManager.ENABLE_SAVE_CODE_IMAGE, false);
     }
 
     class KeyManager {
+        static final String AUTO_USE_RESULT = "setting_auto_use_result";
         static final String AUTO_COPY_AFTER_SCAN_KEY = "setting_auto_copy_after_scan";
         static final String AUTO_OPEN_WEB_BROWSER_KEY = "setting_auto_open_web_browser";
         static final String AUTO_CALL_TO_PHONE_NUMBER = "setting_auto_call_to_phone_number";

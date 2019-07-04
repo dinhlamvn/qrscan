@@ -10,7 +10,7 @@
     <string name="scan_description">DI CHUYỂN CAMERA ĐẾN MÃ</string>
 
     <!-- Resource for setting screen -->
-    <string name="setting_title_auto">Tự động</string>
+    <string name="setting_title_result">Tự động</string>
     <string name="setting_title_storage">Bộ nhớ</string>
     <string name="setting_title_others">Khác</string>
 
@@ -20,7 +20,7 @@
     <string name="dialog_result_title">Kết quả</string>
     <string name="dialog_result_confirm_1">SỬ DỤNG</string>
     <string name="dialog_result_confirm_2">CHIA SẺ</string>
-    <string name="dialog_result_confirm_3">HỦY</string>
+    <string name="dialog_result_confirm_3">SAO CHÉP</string>
 
     <string name="toast_result_empty">Kết quả trống</string>
 
@@ -40,8 +40,9 @@
 
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Tự động sao chép kết quả sau khi quét</string>
-    <string name="label_checkbox_auto_make_call">Xác nhận khi sử dụng QRCode gọi điện</string>
-    <string name="label_checkbox_auto_access_to_url">Xác nhận khi sử dụng QRCode truy cập Web</string>
+    <string name="label_checkbox_auto_use">Tự động sử dụng kết quả sau khi quét</string>
+    <string name="label_checkbox_auto_make_call">Bỏ qua xác nhận khi thực hiện cuộc gọi</string>
+    <string name="label_checkbox_auto_access_to_url">Bỏ qua xác nhận khi truy cập URL</string>
     <string name="label_checkbox_save_image_code">Lưu ảnh chụp của mã được quét</string>
     <string name="label_checkbox_enable_sound">Bật âm thanh</string>
     <string name="label_checkbox_enable_vibrate">Bật run</string>
@@ -53,6 +54,7 @@
     <string name="toast_message_restored">Khôi phục kết quả xóa thành công</string>
     <string name="toast_message_restored_list">Khôi phục xxx kết quả thành công</string>
     <string name="toast_message_copied">Đã sao chép vào khay nhớ tạm…!!</string>
+    <string name="toast_message_auto_use">Cho phép ứng dụng tự động sử dụng mã sau khi quét</string>
 
     <!-- About dialog resource -->
     <string name="dialog_about_title">Thông tin</string>
@@ -93,9 +95,6 @@
     <string name="use_with_wifi">KẾT NỐI</string>
     <string name="use_with_product">TRA CỨU</string>
 
-    <!-- Permission notify text -->
-    <string name="call_permission_denied">Bạn nên cho app quyền thực hiện cuộc gọi</string>
-
     <!-- Flash text -->
     <string name="light_flash_on">Bật đèn</string>
     <string name="light_flash_off">Tắt đèn</string>
@@ -103,4 +102,12 @@
     <!-- Wifi text -->
     <string name="wifi_connect_toast">Wifi bắt đầu kết nối đến %s</string>
     <string name="enable_wifi_toast">Bật wifi</string>
+
+    <!-- Permission text -->
+    <string name="permission_camera_allow">Cho phép ứng dụng truy cập camera</string>
+    <string name="permission_camera_denied">Vui lòng cho phép ứng dụng truy cập camera của bạn để có thể quét QRCode &amp; Barcode</string>
+    <string name="permission_storage_allow">Vui lòng cho phép ứng dụng truy cập bộ nhớ điện thoại để lưu ảnh chụp của mã được quét</string>
+    <string name="permission_storage_denied">Vui lòng cho phép ứng dụng truy cập bộ nhớ điện thoại để lưu ảnh chụp của mã được quét</string>
+    <string name="permission_call_allow">Cho phép ứng dụng thực hiện cuộc gọi</string>
+    <string name="permission_call_denied">Vui lòng cho phép ứng dụng thực hiện cuộc gọi để sử dụng QRCode gọi điện</string>
 </resources>

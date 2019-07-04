@@ -4,7 +4,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#3F51B5</color>
 
-    <color name="transparent_blue">#500000ff</color>
+    <color name="transparent_blue">#9b000000</color>
 
     <color name="flash_btn_active">#f5f500</color>
     <color name="flash_btn_not_active">#ffffff</color>

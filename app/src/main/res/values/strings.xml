@@ -9,7 +9,7 @@
     <string name="scan_description">MOVE CAMERA TO CODE</string>
 
     <!-- Resource for setting screen -->
-    <string name="setting_title_auto">Auto</string>
+    <string name="setting_title_result">Result</string>
     <string name="setting_title_storage">Storage</string>
     <string name="setting_title_others">Others</string>
 
@@ -19,7 +19,7 @@
     <string name="dialog_result_title">Result</string>
     <string name="dialog_result_confirm_1">USE</string>
     <string name="dialog_result_confirm_2">SHARE</string>
-    <string name="dialog_result_confirm_3">CANCEL</string>
+    <string name="dialog_result_confirm_3">COPY</string>
 
     <string name="toast_result_empty">The result is empty</string>
 
@@ -39,8 +39,9 @@
 
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Auto copy result after scan</string>
-    <string name="label_checkbox_auto_make_call">Confirm when use QRCode call phone</string>
-    <string name="label_checkbox_auto_access_to_url">Confirm when use QRCode access Web</string>
+    <string name="label_checkbox_auto_use">Auto use result after scan</string>
+    <string name="label_checkbox_auto_make_call">Skip confirm to make a call phone</string>
+    <string name="label_checkbox_auto_access_to_url">Skip confirm to access to the Web URL</string>
     <string name="label_checkbox_save_image_code">Save capture image of code</string>
     <string name="label_checkbox_enable_sound">Enable sound</string>
     <string name="label_checkbox_enable_vibrate">Enable vibrate</string>
@@ -52,6 +53,7 @@
     <string name="toast_message_restored">Restored one item succeed</string>
     <string name="toast_message_restored_list">Restored xxx item succeed</string>
     <string name="toast_message_copied">Copied to clipboard…!!</string>
+    <string name="toast_message_auto_use">Allow application auto use result of code after scanned</string>
 
     <!-- About dialog resource -->
     <string name="dialog_about_title">Info</string>
@@ -92,9 +94,6 @@
     <string name="use_with_wifi">CONNECT</string>
     <string name="use_with_product">RESEARCH</string>
 
-    <!-- Permission notify text -->
-    <string name="call_permission_denied">You should allow app make the call phone</string>
-
     <!-- Flash text -->
     <string name="light_flash_on">Light Flash On</string>
     <string name="light_flash_off">Light Flash Off</string>
@@ -102,4 +101,12 @@
     <!-- Wifi text -->
     <string name="wifi_connect_toast">Wifi started connect to %s</string>
     <string name="enable_wifi_toast">Enable wifi</string>
+
+    <!-- Permission text -->
+    <string name="permission_camera_allow">Allow application access to your camera</string>
+    <string name="permission_camera_denied">Please allow application access to your camera to scan QRCode &amp; Barcode</string>
+    <string name="permission_storage_allow">Allow application access to your phone storage</string>
+    <string name="permission_storage_denied">Please allow application access your phone storage to save code capture image</string>
+    <string name="permission_call_allow">Allow application make a call</string>
+    <string name="permission_call_denied">Please allow application make a call to use QRCode call</string>
 </resources>
