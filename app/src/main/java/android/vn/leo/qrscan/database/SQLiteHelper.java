@@ -148,6 +148,17 @@ public class SQLiteHelper extends SQLiteOpenHelper implements DatabaseHelper {
     }
 
     @Override
+    public boolean remove(String id) {
+        SQLiteDatabase db = getWritableDatabase();
+
+        int i = db.delete(TABLE_NAME, "id=?", new String[] {id});
+
+        db.close();
+
+        return i > 0;
+    }
+
+    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         if (newVersion > oldVersion) {
             // Do somethings

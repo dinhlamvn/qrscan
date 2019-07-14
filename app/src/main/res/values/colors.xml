@@ -10,14 +10,14 @@
     <color name="flash_btn_not_active">#ffffff</color>
 
     <!-- Background color for date group -->
-    <color name="date_group_background">#303F9F</color>
+    <color name="date_group_background">#e0e0e0</color>
 
     <!-- Color of text -->
     <color name="color_text_undo">#efef1e</color>
 
     <color name="colorActionMode">#3F51B5</color>
 
-    <color name="row_activated">#b2ebf2</color>
+    <color name="row_activated">#4dd0e1</color>
 
     <color name="colorResultText">#9e9e9e</color>
     <color name="colorTypeText">#343434</color>

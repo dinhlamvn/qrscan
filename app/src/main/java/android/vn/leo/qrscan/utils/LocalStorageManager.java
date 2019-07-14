@@ -69,6 +69,14 @@ public class LocalStorageManager {
         return preferences.getBoolean(KeyManager.ENABLE_SAVE_CODE_IMAGE, false);
     }
 
+    public static void setDeleteCodeList(String list) {
+        preferences.edit().putString(KeyManager.DELETE_CODE_LIST, list).apply();
+    }
+
+    public static String getDeleteCodeList() {
+        return preferences.getString(KeyManager.DELETE_CODE_LIST, "");
+    }
+
     class KeyManager {
         static final String AUTO_USE_RESULT = "setting_auto_use_result";
         static final String AUTO_COPY_AFTER_SCAN_KEY = "setting_auto_copy_after_scan";
@@ -77,5 +85,6 @@ public class LocalStorageManager {
         static final String ENABLE_SOUND = "setting_enable_sound";
         static final String ENABLE_VIBRATE = "setting_enable_vibrate";
         static final String ENABLE_SAVE_CODE_IMAGE = "setting_enable_save_code";
+        static final String DELETE_CODE_LIST = "delete_code_list";
     }
 }

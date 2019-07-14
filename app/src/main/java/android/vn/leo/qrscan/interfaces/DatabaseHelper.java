@@ -13,4 +13,6 @@ public interface DatabaseHelper {
     boolean update(ScanResult scanResult);
 
     boolean remove(ScanResult scanResult);
+
+    boolean remove(String id);
 }

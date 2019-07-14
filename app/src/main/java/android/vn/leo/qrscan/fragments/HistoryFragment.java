@@ -157,6 +157,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     public void onListItemRemoveConfirm(final HistoryAdapter.OnChangeCallback onChangeCallback) {
         final Handler handler = new Handler();
         final int size = ResultManager.getInstance().currentSizeOfRemovedList();
+        CommonMethod.putDeleteList((List<ScanResult>) ResultManager.getInstance().getRemovedList());
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -169,6 +170,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
                         .setAction(getResources().getString(R.string.undo_text), new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
+                                CommonMethod.clearDeleteList();
                                 int itemCounts = restoreItems();
                                 ResultManager.getInstance().releaseRemoveList();
                                 if (itemCounts > 0) {
@@ -257,6 +259,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
                 }
             }
             ResultManager.getInstance().releaseRemoveList();
+            CommonMethod.clearDeleteList();
             if (isAllRemoved) {
                 String s = getResources().getString(R.string.removed_text) + " " + count;
                 showToast(s);

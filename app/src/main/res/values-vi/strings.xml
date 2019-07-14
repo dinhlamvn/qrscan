@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Code Scanner</string>
+    <string name="app_name">Máy quét QR &amp; Barcode</string>
     <string name="developer">Lâm Công Đỉnh</string>
     <string name="developer_contact">dinhlamvn353@gmail.com</string>
     <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>

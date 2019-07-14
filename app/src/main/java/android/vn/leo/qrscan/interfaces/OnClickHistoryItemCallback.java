@@ -29,7 +29,6 @@ public interface OnClickHistoryItemCallback {
 
     /**
      * Callback function when user delete list item in action mode of history screen
-     * @param positions The position of item
      * @param onChangeCallback Callback when user restore
      */
     void onListItemRemoveConfirm(HistoryAdapter.OnChangeCallback onChangeCallback);

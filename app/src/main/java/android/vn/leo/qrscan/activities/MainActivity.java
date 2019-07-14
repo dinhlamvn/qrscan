@@ -237,6 +237,14 @@ public class MainActivity extends BaseActivity implements OnResult
     }
 
     private void loadFromDatabase() {
+        List<String> removedList = CommonMethod.fetchDeleteList();
+
+        if (removedList != null && removedList.size() > 0) {
+            for (String s : removedList) {
+                SQLiteHelper.getInstance().remove(s);
+            }
+        }
+
         ResultManager.getInstance().release();
         ResultManager.getInstance().addAll(SQLiteHelper.getInstance().read());
     }
