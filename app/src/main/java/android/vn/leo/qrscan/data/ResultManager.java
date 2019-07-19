@@ -1,17 +1,12 @@
 package android.vn.leo.qrscan.data;
 
-import android.support.annotation.Nullable;
-import android.vn.leo.qrscan.utils.CommonMethod;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
+
+import androidx.annotation.Nullable;
 
 public class ResultManager {
 

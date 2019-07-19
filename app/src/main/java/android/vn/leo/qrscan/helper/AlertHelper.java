@@ -2,12 +2,13 @@ package android.vn.leo.qrscan.helper;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.text.Html;
 import android.view.View;
 import android.vn.leo.qrscan.interfaces.IDialogCallback;
 import android.vn.leo.qrscan.utils.CommonMethod;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 
 public final class AlertHelper {
 

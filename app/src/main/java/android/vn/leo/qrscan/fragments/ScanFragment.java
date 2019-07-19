@@ -1,10 +1,6 @@
 package android.vn.leo.qrscan.fragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,12 +12,18 @@ import android.vn.leo.qrscan.R;
 import android.vn.leo.qrscan.interfaces.OnResult;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.zxing.ResultPoint;
 import com.journeyapps.barcodescanner.BarcodeCallback;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 public class ScanFragment extends Fragment implements DecoratedBarcodeView.TorchListener,
         BarcodeCallback, View.OnKeyListener {
@@ -30,6 +32,8 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     private boolean isFlashOn = false;
 
     private OnResult resultCallback;
+
+    private AdView mAdView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +52,10 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
         mDecoratedBarcodeView.setTorchListener(this);
         mDecoratedBarcodeView.setOnKeyListener(this);
 
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build();
+        mAdView.loadAd(adRequest);
+
         return view;
     }
 
@@ -59,7 +67,14 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+        MenuInflater menuInflater = getActivity().getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        if (isFlashOn) {
+            MenuItem item = menu.findItem(R.id.btn_flash);
+            if (item != null) {
+                item.setIcon(R.drawable.ic_flash_on_24dp);
+            }
+        }
     }
 
     @Override
@@ -80,6 +95,10 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
 
     public void onFlash() {
         isFlashOn = !isFlashOn;
+        turnOnOrOffLight();
+    }
+
+    public void turnOnOrOffLight() {
         if (isFlashOn) {
             mDecoratedBarcodeView.setTorchOn();
         } else {
@@ -107,6 +126,7 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
     public void onResume() {
         if (mDecoratedBarcodeView != null &&
                 this.resultCallback != null && !this.resultCallback.isDisabled()) {
+            mDecoratedBarcodeView.pause();
             mDecoratedBarcodeView.resume();
         }
         super.onResume();

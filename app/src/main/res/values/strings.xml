@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">QR &amp; Barcode Scanner</string>
+    <string name="app_name">Scan QR &amp; Barcode</string>
     <string name="developer">Lâm Công Đỉnh</string>
     <string name="developer_contact">dinhlamvn353@gmail.com</string>
     <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>
@@ -19,7 +19,7 @@
     <string name="dialog_result_title">Result</string>
     <string name="dialog_result_confirm_1">USE</string>
     <string name="dialog_result_confirm_2">SHARE</string>
-    <string name="dialog_result_confirm_3">COPY</string>
+    <string name="dialog_result_confirm_3">COPY &amp;CLOSE</string>
 
     <string name="toast_result_empty">The result is empty</string>
 
@@ -40,8 +40,8 @@
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Auto copy result after scan</string>
     <string name="label_checkbox_auto_use">Auto use result after scan</string>
-    <string name="label_checkbox_auto_make_call">Skip confirm to make a call phone</string>
-    <string name="label_checkbox_auto_access_to_url">Skip confirm to access to the Web URL</string>
+    <string name="label_checkbox_auto_make_call">Turn on confirm to use a call phone</string>
+    <string name="label_checkbox_auto_access_to_url">Turn on confirm to access to the Web URL</string>
     <string name="label_checkbox_save_image_code">Save capture image of code</string>
     <string name="label_checkbox_enable_sound">Enable sound</string>
     <string name="label_checkbox_enable_vibrate">Enable vibrate</string>

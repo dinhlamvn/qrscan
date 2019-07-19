@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Máy quét QR &amp; Barcode</string>
+    <string name="app_name">Quét QR &amp; Barcode</string>
     <string name="developer">Lâm Công Đỉnh</string>
     <string name="developer_contact">dinhlamvn353@gmail.com</string>
     <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>
@@ -20,7 +20,7 @@
     <string name="dialog_result_title">Kết quả</string>
     <string name="dialog_result_confirm_1">SỬ DỤNG</string>
     <string name="dialog_result_confirm_2">CHIA SẺ</string>
-    <string name="dialog_result_confirm_3">SAO CHÉP</string>
+    <string name="dialog_result_confirm_3">SAO CHÉP &amp; ĐÓNG</string>
 
     <string name="toast_result_empty">Kết quả trống</string>
 
@@ -41,8 +41,8 @@
     <!-- String resource for setting -->
     <string name="label_checkbox_auto_copy">Tự động sao chép kết quả sau khi quét</string>
     <string name="label_checkbox_auto_use">Tự động sử dụng kết quả sau khi quét</string>
-    <string name="label_checkbox_auto_make_call">Bỏ qua xác nhận khi thực hiện cuộc gọi</string>
-    <string name="label_checkbox_auto_access_to_url">Bỏ qua xác nhận khi truy cập URL</string>
+    <string name="label_checkbox_auto_make_call">Bật xác nhận khi thực hiện cuộc gọi</string>
+    <string name="label_checkbox_auto_access_to_url">Bật xác nhận khi truy cập URL</string>
     <string name="label_checkbox_save_image_code">Lưu ảnh chụp của mã được quét</string>
     <string name="label_checkbox_enable_sound">Bật âm thanh</string>
     <string name="label_checkbox_enable_vibrate">Bật run</string>
@@ -106,7 +106,7 @@
     <!-- Permission text -->
     <string name="permission_camera_allow">Cho phép ứng dụng truy cập camera</string>
     <string name="permission_camera_denied">Vui lòng cho phép ứng dụng truy cập camera của bạn để có thể quét QRCode &amp; Barcode</string>
-    <string name="permission_storage_allow">Vui lòng cho phép ứng dụng truy cập bộ nhớ điện thoại để lưu ảnh chụp của mã được quét</string>
+    <string name="permission_storage_allow">Đã cho phép ứng dụng truy cập bộ nhớ điện thoại</string>
     <string name="permission_storage_denied">Vui lòng cho phép ứng dụng truy cập bộ nhớ điện thoại để lưu ảnh chụp của mã được quét</string>
     <string name="permission_call_allow">Cho phép ứng dụng thực hiện cuộc gọi</string>
     <string name="permission_call_denied">Vui lòng cho phép ứng dụng thực hiện cuộc gọi để sử dụng QRCode gọi điện</string>

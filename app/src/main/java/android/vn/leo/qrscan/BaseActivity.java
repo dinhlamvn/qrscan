@@ -2,14 +2,14 @@ package android.vn.leo.qrscan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.IntDef;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.vn.leo.qrscan.activities.MainActivity;
 import android.widget.Toast;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 public abstract class BaseActivity extends AppCompatActivity {
 

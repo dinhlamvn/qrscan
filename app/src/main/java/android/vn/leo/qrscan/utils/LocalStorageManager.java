@@ -29,20 +29,20 @@ public class LocalStorageManager {
         return preferences.getBoolean(KeyManager.AUTO_COPY_AFTER_SCAN_KEY, true);
     }
 
-    public static void setAutoOpenWebBrowser(boolean value) {
-        preferences.edit().putBoolean(KeyManager.AUTO_OPEN_WEB_BROWSER_KEY, value).apply();
+    public static void setTurnOnConfirmMoveWeb(boolean value) {
+        preferences.edit().putBoolean(KeyManager.TURN_ON_CONFIRM_MOVE_WEB, value).apply();
     }
 
-    public static boolean isAutoOpenWebBrowser() {
-        return preferences.getBoolean(KeyManager.AUTO_OPEN_WEB_BROWSER_KEY, false);
+    public static boolean isTurnOnConfirmMoveWeb() {
+        return preferences.getBoolean(KeyManager.TURN_ON_CONFIRM_MOVE_WEB, false);
     }
 
-    public static void setAutoOpenCallToPhoneNumber(boolean value) {
-        preferences.edit().putBoolean(KeyManager.AUTO_CALL_TO_PHONE_NUMBER, value).apply();
+    public static void setTurnOnConfirmCallPhone(boolean value) {
+        preferences.edit().putBoolean(KeyManager.TURN_ON_CONFIRM_CALL_PHONE, value).apply();
     }
 
-    public static boolean isAutoCallToPhoneNumber() {
-        return preferences.getBoolean(KeyManager.AUTO_CALL_TO_PHONE_NUMBER, false);
+    public static boolean isTurnOnConfirmCallPhone() {
+        return preferences.getBoolean(KeyManager.TURN_ON_CONFIRM_CALL_PHONE, false);
     }
 
     public static void setEnableSound(boolean value) {
@@ -80,8 +80,8 @@ public class LocalStorageManager {
     class KeyManager {
         static final String AUTO_USE_RESULT = "setting_auto_use_result";
         static final String AUTO_COPY_AFTER_SCAN_KEY = "setting_auto_copy_after_scan";
-        static final String AUTO_OPEN_WEB_BROWSER_KEY = "setting_auto_open_web_browser";
-        static final String AUTO_CALL_TO_PHONE_NUMBER = "setting_auto_call_to_phone_number";
+        static final String TURN_ON_CONFIRM_MOVE_WEB = "setting_auto_open_web_browser";
+        static final String TURN_ON_CONFIRM_CALL_PHONE = "setting_auto_call_to_phone_number";
         static final String ENABLE_SOUND = "setting_enable_sound";
         static final String ENABLE_VIBRATE = "setting_enable_vibrate";
         static final String ENABLE_SAVE_CODE_IMAGE = "setting_enable_save_code";

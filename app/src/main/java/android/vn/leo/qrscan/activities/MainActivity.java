@@ -12,25 +12,15 @@ import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
+import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.vn.leo.qrscan.BaseActivity;
@@ -61,6 +51,12 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.tabs.TabLayout;
 import com.google.zxing.client.result.AddressBookParsedResult;
 import com.google.zxing.client.result.EmailAddressParsedResult;
 import com.google.zxing.client.result.ParsedResult;
@@ -70,7 +66,6 @@ import com.google.zxing.client.result.TelParsedResult;
 import com.google.zxing.client.result.TextParsedResult;
 import com.google.zxing.client.result.URIParsedResult;
 import com.google.zxing.client.result.WifiParsedResult;
-import com.google.zxing.client.result.WifiResultParser;
 import com.journeyapps.barcodescanner.BarcodeResult;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -86,6 +81,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.viewpager.widget.ViewPager;
 
 public class MainActivity extends BaseActivity implements OnResult
         , ResultWorker, OnExecuteResult, OnAppMenuItemSelected {
@@ -103,6 +109,8 @@ public class MainActivity extends BaseActivity implements OnResult
     private AlertDialog useCodeAlert = null;
     private boolean isDisableHandleResult = false;
     private ContentParser parser;
+
+    private InterstitialAd mInterstitialAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +140,20 @@ public class MainActivity extends BaseActivity implements OnResult
         setUpViewPager();
 
         setUpForDrawerLayout();
+
+        // Init google ads
+        MobileAds.initialize(this);
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build());
+            }
+        });
+
+        mInterstitialAd.setAdUnitId(getResources().getString(R.string.google_admob_interstitial));
+        mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build());
     }
 
     @Override
@@ -227,22 +249,58 @@ public class MainActivity extends BaseActivity implements OnResult
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.toast_message_accept_setting, Toast.LENGTH_SHORT).show();
             }
-        } else if (requestCode == REQUEST_CALL_PHONE || requestCode == REQUEST_SEND_MAIL
-                || requestCode == REQUEST_SEND_SMS || requestCode == REQUEST_WEB_BROWSER
-                || requestCode == REQUEST_ADD_CONTACT) {
+            showAdsAfterSetting();
+            release();
+        } else {
+            showAdsAfterUse();
             release();
         }
-
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void showAdsAfterScan() {
+        if (mInterstitialAd.isLoaded()) {
+            Random random = new Random();
+            int ratio = random.nextInt(10);
+            if (ratio <= 3) {
+                mInterstitialAd.show();
+            }
+        }
+    }
+
+    public void showAdsAfterSetting() {
+        if (mInterstitialAd.isLoaded()) {
+            Random random = new Random();
+            int ratio = random.nextInt(10);
+            if (ratio <= 2) {
+                mInterstitialAd.show();
+            }
+        }
+    }
+
+    public void showAdsAfterUse() {
+        if (mInterstitialAd.isLoaded()) {
+            Random random = new Random();
+            int ratio = random.nextInt(10);
+            if (ratio <= 5) {
+                mInterstitialAd.show();
+            }
+        }
     }
 
     private void loadFromDatabase() {
         List<String> removedList = CommonMethod.fetchDeleteList();
 
+        boolean isRemoveAll = false;
+
         if (removedList != null && removedList.size() > 0) {
             for (String s : removedList) {
-                SQLiteHelper.getInstance().remove(s);
+                isRemoveAll = SQLiteHelper.getInstance().remove(s);
             }
+        }
+
+        if (isRemoveAll) {
+            CommonMethod.clearDeleteList();
         }
 
         ResultManager.getInstance().release();
@@ -307,9 +365,7 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu, menu);
-        return true;
+        return false;
     }
 
     @Override
@@ -344,8 +400,8 @@ public class MainActivity extends BaseActivity implements OnResult
         if (mDrawerLayout == null) {
             return;
         }
-        if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
-            mDrawerLayout.closeDrawer(Gravity.START, true);
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.closeDrawer(GravityCompat.START, true);
         }
     }
 
@@ -353,8 +409,8 @@ public class MainActivity extends BaseActivity implements OnResult
         if (mDrawerLayout == null) {
             return false;
         }
-        if (!mDrawerLayout.isDrawerOpen(Gravity.START)) {
-            mDrawerLayout.openDrawer(Gravity.START, true);
+        if (!mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
+            mDrawerLayout.openDrawer(GravityCompat.START, true);
             return true;
         }
         return false;
@@ -425,10 +481,14 @@ public class MainActivity extends BaseActivity implements OnResult
         this.scanResult = null;
         isHandlingResult = false;
         this.useCodeAlert = null;
+        ScanFragment scanFragment = (ScanFragment) pageAdapter.getItem(0);
+        isDisableHandleResult = false;
+        scanFragment.onResume();
     }
 
     @Override
     public void onResult(BarcodeResult result) {
+        showAdsAfterScan();
         this.isHandlingResult = true;
         ParsedResult parsedResult = ResultParser.parseResult(result.getResult());
 
@@ -646,9 +706,9 @@ public class MainActivity extends BaseActivity implements OnResult
     @Override
     public void callPhone(final ParsedResult result) {
         final TelParsedResult tell = (TelParsedResult) result;
-        boolean isAutoCall = LocalStorageManager.isAutoCallToPhoneNumber();
+        boolean isTurnOnConfirmCallPhone = LocalStorageManager.isTurnOnConfirmCallPhone();
 
-        if (isAutoCall) {
+        if (!isTurnOnConfirmCallPhone) {
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE)
                     != PackageManager.PERMISSION_GRANTED) {
                 Dexter.withActivity(this)
@@ -761,9 +821,9 @@ public class MainActivity extends BaseActivity implements OnResult
     @Override
     public void accessUri(final ParsedResult result) {
         URIParsedResult uri = (URIParsedResult) result;
-        boolean isAutoOpenWeb = LocalStorageManager.isAutoOpenWebBrowser();
+        boolean isTurnOnConfirmMoveWeb = LocalStorageManager.isTurnOnConfirmMoveWeb();
 
-        if (isAutoOpenWeb) {
+        if (!isTurnOnConfirmMoveWeb) {
             startWebBrowser(uri.getURI());
             return;
         }

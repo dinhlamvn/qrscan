@@ -1,27 +1,11 @@
 package android.vn.leo.qrscan.fragments;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.view.ActionMode;
-import android.support.v7.widget.DividerItemDecoration;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
-import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,9 +23,28 @@ import android.vn.leo.qrscan.utils.CommonMethod;
 import android.vn.leo.qrscan.utils.Const;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.snackbar.Snackbar;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.view.ActionMode;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryFragment extends Fragment implements OnClickHistoryItemCallback {
 
@@ -54,6 +57,8 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     // Action mode
     private ActionMode mActionMode;
     private ActionModeCallback actionModeCallback;
+
+    private AdView mAdView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -101,7 +106,12 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
 
+        mAdView = view.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build();
+        mAdView.loadAd(adRequest);
+
         final RecyclerView recyclerView = view.findViewById(R.id.history_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerView.setHasFixedSize(true);
         recyclerView.setTag("recycler_view");
         mAdapter = new HistoryAdapter(this);
@@ -129,6 +139,9 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                final List<ScanResult> deletes = new ArrayList<>();
+                deletes.add(item);
+                CommonMethod.putDeleteList(deletes);
                 toggleSelection(false, position);
                 mAdapter.notifyItemRemoved(position);
                 final Handler handler = new Handler();
@@ -157,7 +170,8 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     public void onListItemRemoveConfirm(final HistoryAdapter.OnChangeCallback onChangeCallback) {
         final Handler handler = new Handler();
         final int size = ResultManager.getInstance().currentSizeOfRemovedList();
-        CommonMethod.putDeleteList((List<ScanResult>) ResultManager.getInstance().getRemovedList());
+        final List<ScanResult> deletes = new ArrayList<>(ResultManager.getInstance().getRemovedList());
+        CommonMethod.putDeleteList(deletes);
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {

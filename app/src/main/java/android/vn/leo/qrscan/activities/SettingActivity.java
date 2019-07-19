@@ -1,14 +1,8 @@
 package android.vn.leo.qrscan.activities;
 
 import android.Manifest;
-import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.vn.leo.qrscan.BaseActivity;
 import android.vn.leo.qrscan.R;
@@ -24,12 +18,16 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.util.List;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
+import androidx.core.app.ActivityCompat;
+
 public class SettingActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
 
     public static final String AUTO_COPY = "auto_copy";
     public static final String AUTO_USE = "auto_use";
-    public static final String AUTO_MAKE_CALL = "auto_make_call";
-    public static final String AUTO_ACCESS_URL = "auto_access_url";
+    public static final String TURN_ON_CONFIRM_CALL_PHONE = "turn_on_confirm_call_phone";
+    public static final String TURN_ON_CONFIRM_MOVE_WEB = "turn_on_confirm_move_web";
     public static final String ENABLE_SOUND = "enable_sound";
     public static final String ENABLE_VIBRATE = "enable_vibrate";
     public static final String ENABLE_SAVE_CODE_IMAGE = "enable_save_code_image";
@@ -60,19 +58,19 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
         ckbAutoUse.setOnCheckedChangeListener(this);
         ckbAutoUse.setChecked(isAutoUse);
 
-        boolean isAutoMakeCall = LocalStorageManager.isAutoCallToPhoneNumber();
-        changes[2] = isAutoMakeCall;
+        boolean isTurnOnConfirmCallPhone = LocalStorageManager.isTurnOnConfirmCallPhone();
+        changes[2] = isTurnOnConfirmCallPhone;
         final CheckBox ckbAutoMakeCall = findViewById(R.id.checkbox_auto_make_call);
-        ckbAutoMakeCall.setTag(AUTO_MAKE_CALL);
+        ckbAutoMakeCall.setTag(TURN_ON_CONFIRM_CALL_PHONE);
         ckbAutoMakeCall.setOnCheckedChangeListener(this);
-        ckbAutoMakeCall.setChecked(isAutoMakeCall);
+        ckbAutoMakeCall.setChecked(isTurnOnConfirmCallPhone);
 
-        boolean isAutoAccessUrl = LocalStorageManager.isAutoOpenWebBrowser();
-        changes[3] = isAutoAccessUrl;
+        boolean isTurnOnConfirmMoveWeb = LocalStorageManager.isTurnOnConfirmMoveWeb();
+        changes[3] = isTurnOnConfirmMoveWeb;
         final CheckBox ckbAutoUrl = findViewById(R.id.checkbox_auto_access_url);
-        ckbAutoUrl.setTag(AUTO_ACCESS_URL);
+        ckbAutoUrl.setTag(TURN_ON_CONFIRM_MOVE_WEB);
         ckbAutoUrl.setOnCheckedChangeListener(this);
-        ckbAutoUrl.setChecked(isAutoAccessUrl);
+        ckbAutoUrl.setChecked(isTurnOnConfirmMoveWeb);
 
         boolean isEnableSound = LocalStorageManager.isEnableSound();
         changes[4] = isEnableSound;
@@ -118,12 +116,12 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
                 saveSettingEnableAutoUse(isChecked);
                 break;
             }
-            case AUTO_MAKE_CALL: {
-                LocalStorageManager.setAutoOpenCallToPhoneNumber(isChecked);
+            case TURN_ON_CONFIRM_CALL_PHONE: {
+                LocalStorageManager.setTurnOnConfirmCallPhone(isChecked);
                 break;
             }
-            case AUTO_ACCESS_URL: {
-                LocalStorageManager.setAutoOpenWebBrowser(isChecked);
+            case TURN_ON_CONFIRM_MOVE_WEB: {
+                LocalStorageManager.setTurnOnConfirmMoveWeb(isChecked);
                 break;
             }
             case ENABLE_SOUND: {
@@ -181,8 +179,8 @@ public class SettingActivity extends BaseActivity implements CompoundButton.OnCh
     public boolean hasChange() {
         boolean b1 = LocalStorageManager.isAutoCopyAfterScan();
         boolean b2 = LocalStorageManager.isAutoUseAfterScan();
-        boolean b3 = LocalStorageManager.isAutoCallToPhoneNumber();
-        boolean b4 = LocalStorageManager.isAutoOpenWebBrowser();
+        boolean b3 = LocalStorageManager.isTurnOnConfirmCallPhone();
+        boolean b4 = LocalStorageManager.isTurnOnConfirmMoveWeb();
         boolean b5 = LocalStorageManager.isEnableSound();
         boolean b6 = LocalStorageManager.isEnableVibrate();
         boolean b7 = LocalStorageManager.isEnableSaveCodeImage();

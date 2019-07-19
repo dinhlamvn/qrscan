@@ -1,8 +1,10 @@
 package android.vn.leo.qrscan.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import static androidx.recyclerview.widget.ItemTouchHelper.Callback.makeMovementFlags;
 
 public class HistoryItemTouchHelperCallback extends ItemTouchHelper.Callback {
 

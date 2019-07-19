@@ -2,23 +2,20 @@ package android.vn.leo.qrscan.utils;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.vn.leo.qrscan.BuildConfig;
 import android.vn.leo.qrscan.R;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.widget.Toast;
 
 import com.google.zxing.client.result.ParsedResultType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 public final class CommonMethod {
 
