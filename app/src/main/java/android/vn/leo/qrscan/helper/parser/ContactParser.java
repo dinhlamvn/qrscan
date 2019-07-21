@@ -7,6 +7,7 @@ import com.google.zxing.Result;
 import com.google.zxing.client.result.AddressBookAUResultParser;
 import com.google.zxing.client.result.AddressBookDoCoMoResultParser;
 import com.google.zxing.client.result.ParsedResult;
+import com.google.zxing.client.result.ResultParser;
 import com.google.zxing.client.result.VCardResultParser;
 
 public class ContactParser implements IResultParser {
@@ -25,6 +26,11 @@ public class ContactParser implements IResultParser {
 
         if (parsedResult == null) {
             parsedResult = parser3.parse(result);
+        }
+
+        if (parsedResult == null) {
+            callback.copyText(ResultParser.parseResult(result));
+            return;
         }
 
         callback.addNewContact(parsedResult);

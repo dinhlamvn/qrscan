@@ -148,12 +148,12 @@ public class MainActivity extends BaseActivity implements OnResult
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build());
+                mInterstitialAd.loadAd(new AdRequest.Builder().build());
             }
         });
 
         mInterstitialAd.setAdUnitId(getResources().getString(R.string.google_admob_interstitial));
-        mInterstitialAd.loadAd(new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build());
+        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     @Override
@@ -251,7 +251,7 @@ public class MainActivity extends BaseActivity implements OnResult
             }
             showAdsAfterSetting();
             release();
-        } else {
+        } else if (isRequestCodeUse(requestCode)){
             showAdsAfterUse();
             release();
         }
@@ -261,7 +261,7 @@ public class MainActivity extends BaseActivity implements OnResult
     public void showAdsAfterScan() {
         if (mInterstitialAd.isLoaded()) {
             Random random = new Random();
-            int ratio = random.nextInt(10);
+            int ratio = random.nextInt(10) + 1;
             if (ratio <= 3) {
                 mInterstitialAd.show();
             }
@@ -271,7 +271,7 @@ public class MainActivity extends BaseActivity implements OnResult
     public void showAdsAfterSetting() {
         if (mInterstitialAd.isLoaded()) {
             Random random = new Random();
-            int ratio = random.nextInt(10);
+            int ratio = random.nextInt(10) + 1;
             if (ratio <= 2) {
                 mInterstitialAd.show();
             }
@@ -281,7 +281,7 @@ public class MainActivity extends BaseActivity implements OnResult
     public void showAdsAfterUse() {
         if (mInterstitialAd.isLoaded()) {
             Random random = new Random();
-            int ratio = random.nextInt(10);
+            int ratio = random.nextInt(10) + 1;
             if (ratio <= 5) {
                 mInterstitialAd.show();
             }
@@ -689,6 +689,10 @@ public class MainActivity extends BaseActivity implements OnResult
 
     @Override
     public void copyText(final ParsedResult result) {
+        if (result == null) {
+            release();
+            return;
+        }
         CommonMethod.copyResultToClipboard(this, scanResult.getResult());
         release();
     }
@@ -745,6 +749,7 @@ public class MainActivity extends BaseActivity implements OnResult
 
         Intent intent = new Intent(Intent.ACTION_SEND);
 
+        intent.setType("message/rfc822");
         intent.putExtra(Intent.EXTRA_EMAIL, email.getTos());
         intent.putExtra(Intent.EXTRA_SUBJECT, email.getSubject());
         intent.putExtra(Intent.EXTRA_TEXT, email.getBody());

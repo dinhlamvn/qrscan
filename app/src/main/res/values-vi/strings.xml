@@ -110,4 +110,6 @@
     <string name="permission_storage_denied">Vui lòng cho phép ứng dụng truy cập bộ nhớ điện thoại để lưu ảnh chụp của mã được quét</string>
     <string name="permission_call_allow">Cho phép ứng dụng thực hiện cuộc gọi</string>
     <string name="permission_call_denied">Vui lòng cho phép ứng dụng thực hiện cuộc gọi để sử dụng QRCode gọi điện</string>
+
+    <string name="activity_not_found">Không tìm thấy bất kỳ ứng dụng nào để sử dụng code này</string>
 </resources>

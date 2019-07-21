@@ -4,6 +4,8 @@ import android.vn.leo.qrscan.interfaces.IResultParser;
 import android.vn.leo.qrscan.interfaces.ResultWorker;
 
 import com.google.zxing.Result;
+import com.google.zxing.client.result.ParsedResult;
+import com.google.zxing.client.result.ResultParser;
 import com.google.zxing.client.result.TelResultParser;
 
 public class TellParser implements IResultParser {
@@ -11,6 +13,13 @@ public class TellParser implements IResultParser {
     @Override
     public void parse(Result result, ResultWorker callback) {
         TelResultParser parser = new TelResultParser();
-        callback.callPhone(parser.parse(result));
+
+        ParsedResult parsedResult = parser.parse(result);
+
+        if (parsedResult == null) {
+            callback.copyText(ResultParser.parseResult(result));
+            return;
+        }
+        callback.callPhone(parsedResult);
     }
 }

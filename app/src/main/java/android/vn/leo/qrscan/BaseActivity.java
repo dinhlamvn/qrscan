@@ -1,5 +1,6 @@
 package android.vn.leo.qrscan;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -37,7 +38,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract int getLayoutResource();
 
     protected void startActivityWithRequestCode(Intent intent, @RequestHandelCode int requestCode) {
-        startActivityForResult(intent, requestCode);
+        try {
+            startActivityForResult(intent, requestCode);
+        } catch (ActivityNotFoundException e) {
+            showToast(getResources().getString(R.string.activity_not_found));
+        }
+
     }
 
     protected void showToast(final String message) {
@@ -47,5 +53,13 @@ public abstract class BaseActivity extends AppCompatActivity {
                 Toast.makeText(BaseActivity.this, message, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    protected boolean isRequestCodeUse(int requestCode) {
+        return requestCode == REQUEST_CALL_PHONE ||
+                requestCode == REQUEST_WEB_BROWSER ||
+                requestCode == REQUEST_SEND_MAIL ||
+                requestCode == REQUEST_SEND_SMS ||
+                requestCode == REQUEST_ADD_CONTACT;
     }
 }

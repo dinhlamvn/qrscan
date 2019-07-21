@@ -109,4 +109,6 @@
     <string name="permission_storage_denied">Please allow application access your phone storage to save code capture image</string>
     <string name="permission_call_allow">Allow application make a call</string>
     <string name="permission_call_denied">Please allow application make a call to use QRCode call</string>
+
+    <string name="activity_not_found">Could not find any application to use this code</string>
 </resources>
