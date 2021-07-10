@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -26,8 +26,10 @@ public abstract class BaseActivity extends AppCompatActivity {
             REQUEST_SEND_SMS,
             REQUEST_SEND_MAIL,
             REQUEST_ADD_CONTACT
-    })@Retention(RetentionPolicy.SOURCE)
-    @interface RequestHandelCode { }
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    @interface RequestHandelCode {
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

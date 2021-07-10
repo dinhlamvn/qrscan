@@ -28,6 +28,7 @@ import android.vn.leo.qrscan.adapters.MainScreenAdapter;
 import android.vn.leo.qrscan.data.ResultManager;
 import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.database.SQLiteHelper;
+import android.vn.leo.qrscan.extensions.ExtensionsKt;
 import android.vn.leo.qrscan.fragments.HistoryFragment;
 import android.vn.leo.qrscan.fragments.ScanFragment;
 import android.vn.leo.qrscan.helper.AlertHelper;
@@ -87,6 +88,9 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager.widget.ViewPager;
+
+import kotlin.Unit;
+import kotlin.jvm.functions.Function1;
 
 public class MainActivity extends BaseActivity implements OnResult
         , ResultWorker, OnExecuteResult, OnAppMenuItemSelected {
@@ -433,7 +437,7 @@ public class MainActivity extends BaseActivity implements OnResult
     public void onSharingSelected() {
         String shareMessage = getResources().getString(R.string.share_message) + "\n"
                 + "https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID + "\n\n";
-        CommonMethod.share(this, shareMessage);
+        ExtensionsKt.share(shareMessage, this, "", true);
         closeAppMenu();
     }
 

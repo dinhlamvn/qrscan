@@ -10,7 +10,7 @@ import com.google.zxing.client.result.ResultParser;
 
 public class ContentParser {
 
-    private ResultWorker resultWorker;
+    private final ResultWorker resultWorker;
 
     public ContentParser(ResultWorker resultWorker) {
         this.resultWorker = resultWorker;

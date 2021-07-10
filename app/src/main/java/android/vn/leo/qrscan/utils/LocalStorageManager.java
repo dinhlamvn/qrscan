@@ -77,7 +77,7 @@ public class LocalStorageManager {
         return preferences.getString(KeyManager.DELETE_CODE_LIST, "");
     }
 
-    class KeyManager {
+    static class KeyManager {
         static final String AUTO_USE_RESULT = "setting_auto_use_result";
         static final String AUTO_COPY_AFTER_SCAN_KEY = "setting_auto_copy_after_scan";
         static final String TURN_ON_CONFIRM_MOVE_WEB = "setting_auto_open_web_browser";

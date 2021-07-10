@@ -27,8 +27,8 @@ import java.util.Locale;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemSwipedOrMovedCallback {
 
-    private OnClickHistoryItemCallback clickHistoryItemCallback;
-    private SparseBooleanArray selectedItems = new SparseBooleanArray();
+    private final OnClickHistoryItemCallback clickHistoryItemCallback;
+    private final SparseBooleanArray selectedItems = new SparseBooleanArray();
 
     public interface OnChangeCallback {
         void onChange();
@@ -44,34 +44,25 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         LayoutInflater inflater = (LayoutInflater) viewGroup.getContext().getSystemService(
                 Context.LAYOUT_INFLATER_SERVICE);
         assert inflater != null;
-        switch (viewType) {
-            case 0: {
-                View view = inflater.inflate(R.layout.list_history_date_group_item, viewGroup, false);
-                return new HistoryWithDateGroupViewHolder(view);
-            }
-            default: {
-                View view = inflater.inflate(R.layout.list_history_item, viewGroup, false);
-                return new HistoryViewHolder(view);
-            }
+        if (viewType == 0) {
+            View view = inflater.inflate(R.layout.list_history_date_group_item, viewGroup, false);
+            return new HistoryWithDateGroupViewHolder(view);
         }
+        View view = inflater.inflate(R.layout.list_history_item, viewGroup, false);
+        return new HistoryViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder viewHolder, int i) {
         final ScanResult item = ResultManager.getInstance().get(i);
-        switch (viewHolder.getItemViewType()) {
-            case 0: {
-                HistoryWithDateGroupViewHolder holder = (HistoryWithDateGroupViewHolder) viewHolder;
-                holder.bind(item);
-                holder.itemView.setActivated(selectedItems.get(i, false));
-                break;
-            }
-            default: {
-                HistoryViewHolder holder = (HistoryViewHolder) viewHolder;
-                holder.bind(item);
-                holder.itemView.setActivated(selectedItems.get(i, false));
-                break;
-            }
+        if (viewHolder.getItemViewType() == 0) {
+            HistoryWithDateGroupViewHolder holder = (HistoryWithDateGroupViewHolder) viewHolder;
+            holder.bind(item);
+            holder.itemView.setActivated(selectedItems.get(i, false));
+        } else {
+            HistoryViewHolder holder = (HistoryViewHolder) viewHolder;
+            holder.bind(item);
+            holder.itemView.setActivated(selectedItems.get(i, false));
         }
     }
 
@@ -161,13 +152,11 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         int min = position - 1;
         int max = position + 1;
 
-        while (min >= 0) {
-            if (selectedItems.get(min, false)) break;
+        while (min >= 0 && !selectedItems.get(min, false)) {
             min--;
         }
 
-        while (max < getItemCount()) {
-            if (selectedItems.get(max, false)) break;
+        while (max < getItemCount() && !selectedItems.get(max, false)) {
             max++;
         }
 

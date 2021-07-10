@@ -5,7 +5,7 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 public interface OnResult {
 
     /**
-     * Check if client disable handel with result scan
+     * Check if client disable handle with result scan
      */
     boolean isDisabled();
 
