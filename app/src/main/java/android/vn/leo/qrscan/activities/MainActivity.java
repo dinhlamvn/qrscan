@@ -12,13 +12,11 @@ import android.net.Uri;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.os.Build;
-import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -51,10 +49,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.tabs.TabLayout;
 import com.google.zxing.client.result.AddressBookParsedResult;
@@ -141,19 +136,19 @@ public class MainActivity extends BaseActivity implements OnResult
 
         setUpForDrawerLayout();
 
-        // Init google ads
-        MobileAds.initialize(this);
-
-        mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdListener(new AdListener() {
-            @Override
-            public void onAdClosed() {
-                mInterstitialAd.loadAd(new AdRequest.Builder().build());
-            }
-        });
-
-        mInterstitialAd.setAdUnitId(getResources().getString(R.string.google_admob_interstitial));
-        mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//        // Init google ads
+//        MobileAds.initialize(this);
+//
+//        mInterstitialAd = new InterstitialAd(this);
+//        mInterstitialAd.setAdListener(new AdListener() {
+//            @Override
+//            public void onAdClosed() {
+//                mInterstitialAd.loadAd(new AdRequest.Builder().build());
+//            }
+//        });
+//
+//        mInterstitialAd.setAdUnitId(getResources().getString(R.string.google_admob_interstitial));
+//        mInterstitialAd.loadAd(new AdRequest.Builder().build());
     }
 
     @Override
@@ -249,7 +244,7 @@ public class MainActivity extends BaseActivity implements OnResult
             if (resultCode == RESULT_OK) {
                 Toast.makeText(this, R.string.toast_message_accept_setting, Toast.LENGTH_SHORT).show();
             }
-            showAdsAfterSetting();
+            //showAdsAfterSetting();
             release();
         } else if (isRequestCodeUse(requestCode)){
             showAdsAfterUse();

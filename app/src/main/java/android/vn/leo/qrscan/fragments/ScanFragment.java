@@ -52,9 +52,9 @@ public class ScanFragment extends Fragment implements DecoratedBarcodeView.Torch
         mDecoratedBarcodeView.setTorchListener(this);
         mDecoratedBarcodeView.setOnKeyListener(this);
 
-        mAdView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build();
-        mAdView.loadAd(adRequest);
+//        mAdView = view.findViewById(R.id.adView);
+//        AdRequest adRequest = new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build();
+//        mAdView.loadAd(adRequest);
 
         return view;
     }

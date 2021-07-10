@@ -12,9 +12,11 @@ import android.vn.leo.qrscan.data.ScanResult;
 import android.vn.leo.qrscan.interfaces.OnClickHistoryItemCallback;
 import android.vn.leo.qrscan.utils.CommonMethod;
 import android.vn.leo.qrscan.utils.FormatUtility;
-import android.vn.leo.qrscan.utils.StringUtility;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -22,9 +24,6 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnItemSwipedOrMovedCallback {
 
@@ -142,6 +141,7 @@ public class HistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     /**
      * Toggle item selection on action mode status
+     *
      * @param position The position of item
      */
     public void toggleSelection(int position) {

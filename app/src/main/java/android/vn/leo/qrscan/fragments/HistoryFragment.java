@@ -58,8 +58,6 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     private ActionMode mActionMode;
     private ActionModeCallback actionModeCallback;
 
-    private AdView mAdView;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,10 +103,6 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-
-        mAdView = view.findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice("989E8904E0C066595F894A9EE90E0911").build();
-        mAdView.loadAd(adRequest);
 
         final RecyclerView recyclerView = view.findViewById(R.id.history_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

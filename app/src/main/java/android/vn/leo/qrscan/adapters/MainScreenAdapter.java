@@ -17,7 +17,8 @@ public class MainScreenAdapter extends FragmentPagerAdapter {
 
     private List<String> titles = null;
 
-    private Fragment fragment1, fragment2;
+    private final Fragment fragment1;
+    private final Fragment fragment2;
 
     public MainScreenAdapter(FragmentManager fm) {
         super(fm);
