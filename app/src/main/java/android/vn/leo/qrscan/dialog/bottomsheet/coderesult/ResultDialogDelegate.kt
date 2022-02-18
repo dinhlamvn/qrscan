@@ -19,6 +19,6 @@ class ResultDialogDelegate(private val fragmentManager: FragmentManager) {
         val bundle = Bundle().apply {
             putParcelable("result", result)
         }
-        dialog.showDialog(fragmentManager, bundle, dismissListener, dialogNotFoundCallback)
+        dialog.showDialog(fragmentManager, bundle, dismissListener)
     }
 }

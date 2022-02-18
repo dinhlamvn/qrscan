@@ -49,8 +49,7 @@ class UrlResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult
     override fun showDialog(
         fragmentManager: FragmentManager,
         argument: Bundle,
-        dismissListener: OnDialogDismissListener?,
-        dialogNotFoundCallback: () -> Unit
+        dismissListener: OnDialogDismissListener?
     ) {
         UrlResultDialogFragment().apply {
             this.dismissListener = dismissListener

@@ -17,7 +17,10 @@ class BarcodeResultParser {
         return when (parsedResult.type) {
             ParsedResultType.TEXT -> textResult
             ParsedResultType.URI -> {
-                val uriResult = URIResultParser().parse(targetResult) ?: return textResult
+                val uriResult = URIResultParser().parse(targetResult)
+                    ?: URLTOResultParser().parse(targetResult)
+                    ?: BookmarkDoCoMoResultParser().parse(targetResult)
+                    ?: return textResult
                 uriResult.run {
                     BarcodeParsedResult.UrlResult(text, bitmap, title, uri)
                 }
@@ -29,7 +32,9 @@ class BarcodeResultParser {
                 }
             }
             ParsedResultType.SMS -> {
-                val smsResult = SMSMMSResultParser().parse(targetResult) ?: return textResult
+                val smsResult = SMSMMSResultParser().parse(targetResult)
+                    ?: SMSTOMMSTOResultParser().parse(targetResult)
+                    ?: return textResult
                 smsResult.run {
                     BarcodeParsedResult.SmsResult(
                         text, bitmap,
@@ -42,7 +47,9 @@ class BarcodeResultParser {
             }
             ParsedResultType.EMAIL_ADDRESS -> {
                 val emailResult = EmailAddressResultParser().parse(targetResult)
-                    ?: EmailDoCoMoResultParser().parse(targetResult) ?: return textResult
+                    ?: EmailDoCoMoResultParser().parse(targetResult)
+                    ?: SMTPResultParser().parse(targetResult)
+                    ?: return textResult
                 emailResult.run {
                     BarcodeParsedResult.EmailResult(
                         text, bitmap,
@@ -71,14 +78,18 @@ class BarcodeResultParser {
                 }
             }
             ParsedResultType.PRODUCT -> {
-                val productResult = ProductResultParser().parse(targetResult) ?: return textResult
+                val productResult = ProductResultParser().parse(targetResult)
+                    ?: return textResult
                 productResult.run {
                     BarcodeParsedResult.ProductResult(text, bitmap, normalizedProductID, productID)
                 }
             }
             ParsedResultType.ADDRESSBOOK -> {
                 val addressBookResult = AddressBookAUResultParser().parse(targetResult)
-                    ?: AddressBookDoCoMoResultParser().parse(targetResult) ?: return textResult
+                    ?: AddressBookDoCoMoResultParser().parse(targetResult)
+                    ?: VCardResultParser().parse(targetResult)
+                    ?: BizcardResultParser().parse(targetResult)
+                    ?: return textResult
                 addressBookResult.run {
                     BarcodeParsedResult.ContactResult(
                         text,

@@ -10,7 +10,6 @@ interface OnResultDialog {
     fun showDialog(
         fragmentManager: FragmentManager,
         argument: Bundle,
-        dismissListener: OnDialogDismissListener? = null,
-        dialogNotFoundCallback: () -> Unit
+        dismissListener: OnDialogDismissListener? = null
     )
 }
