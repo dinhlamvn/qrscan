@@ -79,11 +79,48 @@ class BarcodeResultParser {
             ParsedResultType.ADDRESSBOOK -> {
                 val addressBookResult = AddressBookAUResultParser().parse(targetResult)
                     ?: AddressBookDoCoMoResultParser().parse(targetResult) ?: return textResult
-                addressBookResult.run { BarcodeParsedResult.ContactResult(text, bitmap, this) }
+                addressBookResult.run {
+                    BarcodeParsedResult.ContactResult(
+                        text,
+                        bitmap,
+                        names.toList(),
+                        nicknames.toList(),
+                        pronunciation,
+                        phoneNumbers.toList(),
+                        phoneTypes.toList(),
+                        emails.toList(),
+                        emailTypes.toList(),
+                        instantMessenger,
+                        note,
+                        addresses.toList(),
+                        addressTypes.toList(),
+                        org,
+                        birthday,
+                        title,
+                        urLs.toList(),
+                        geo.toList()
+                    )
+                }
             }
             ParsedResultType.CALENDAR -> {
                 val calendarResult = VEventResultParser().parse(targetResult) ?: return textResult
-                calendarResult.run { BarcodeParsedResult.CalendarResult(text, bitmap, this) }
+                calendarResult.run {
+                    BarcodeParsedResult.CalendarResult(
+                        text,
+                        bitmap,
+                        summary,
+                        startTimestamp,
+                        isStartAllDay,
+                        endTimestamp,
+                        isEndAllDay,
+                        location,
+                        organizer,
+                        attendees.toList(),
+                        description,
+                        latitude,
+                        longitude
+                    )
+                }
             }
             ParsedResultType.GEO -> {
                 val geoResult = GeoResultParser().parse(targetResult) ?: return textResult
@@ -100,11 +137,25 @@ class BarcodeResultParser {
             }
             ParsedResultType.VIN -> {
                 val vinResult = VINResultParser().parse(targetResult) ?: return textResult
-                vinResult.run { BarcodeParsedResult.VINResult(text, bitmap, this) }
+                vinResult.run {
+                    BarcodeParsedResult.VINResult(
+                        text,
+                        bitmap,
+                        vin,
+                        worldManufacturerID,
+                        vehicleDescriptorSection,
+                        vehicleIdentifierSection,
+                        countryCode,
+                        vehicleAttributes,
+                        modelYear,
+                        plantCode,
+                        sequentialNumber
+                    )
+                }
             }
             ParsedResultType.ISBN -> {
                 val isbnResult = ISBNResultParser().parse(targetResult) ?: return textResult
-                isbnResult.run { BarcodeParsedResult.ISBNResult(text, bitmap, this) }
+                isbnResult.run { BarcodeParsedResult.ISBNResult(text, bitmap, isbn) }
             }
             else -> null
         }

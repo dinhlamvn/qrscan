@@ -14,6 +14,7 @@ class ResultDialogDelegate(private val fragmentManager: FragmentManager) {
         dismissListener: OnDialogDismissListener? = null,
         dialogNotFoundCallback: () -> Unit
     ) {
+        resultDialogPicker.result = result
         val dialog = resultDialogPicker.getDialog() ?: return dialogNotFoundCallback.invoke()
         val bundle = Bundle().apply {
             putParcelable("result", result)

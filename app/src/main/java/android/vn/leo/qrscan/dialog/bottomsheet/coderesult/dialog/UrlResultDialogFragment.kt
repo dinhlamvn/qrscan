@@ -1,5 +1,6 @@
 package android.vn.leo.qrscan.dialog.bottomsheet.coderesult.dialog
 
+import android.os.Bundle
 import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
@@ -13,7 +14,12 @@ import android.widget.TextView
 import androidx.fragment.app.FragmentManager
 import com.bumptech.glide.Glide
 
-class UrlResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult.UrlResult>(), OnResultDialog {
+class UrlResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult.UrlResult>(),
+    OnResultDialog {
+
+    companion object {
+        private const val TAG = "UrlResultDialogFragment"
+    }
 
     private val ivScanResult: ImageView by bindView(R.id.image_review_scan_result)
     private val tvScanResult: TextView by bindView(R.id.text_view_scan_result)
@@ -42,9 +48,13 @@ class UrlResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult
 
     override fun showDialog(
         fragmentManager: FragmentManager,
+        argument: Bundle,
         dismissListener: OnDialogDismissListener?,
         dialogNotFoundCallback: () -> Unit
     ) {
-
+        UrlResultDialogFragment().apply {
+            this.dismissListener = dismissListener
+            this.arguments = argument
+        }.show(fragmentManager, TAG)
     }
 }

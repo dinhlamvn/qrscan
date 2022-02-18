@@ -17,6 +17,10 @@ import com.bumptech.glide.Glide
 class TextResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult.TextResult>(),
     OnResultDialog {
 
+    companion object {
+        private const val TAG = "TextResultDialogFragment"
+    }
+
     private val ivScanResult: ImageView by bindView(R.id.image_review_scan_result)
     private val tvScanResult: TextView by bindView(R.id.text_view_scan_result)
     private val btnCopyAndClose: Button by bindView(R.id.button_copy)
@@ -48,6 +52,9 @@ class TextResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResul
         dismissListener: OnDialogDismissListener?,
         dialogNotFoundCallback: () -> Unit
     ) {
-
+        TextResultDialogFragment().apply {
+            this.dismissListener = dismissListener
+            this.arguments = argument
+        }.show(fragmentManager, TAG)
     }
 }

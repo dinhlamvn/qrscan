@@ -2,10 +2,6 @@ package android.vn.leo.qrscan.model
 
 import android.graphics.Bitmap
 import android.os.Parcelable
-import com.google.zxing.client.result.AddressBookParsedResult
-import com.google.zxing.client.result.CalendarParsedResult
-import com.google.zxing.client.result.ISBNParsedResult
-import com.google.zxing.client.result.VINParsedResult
 import kotlinx.android.parcel.Parcelize
 
 sealed class BarcodeParsedResult(open val text: String, open val bitmap: Bitmap) : Parcelable {
@@ -78,14 +74,39 @@ sealed class BarcodeParsedResult(open val text: String, open val bitmap: Bitmap)
     data class ContactResult(
         override val text: String,
         override val bitmap: Bitmap,
-        val addressBookParsedResult: AddressBookParsedResult
+        val names: List<String?> = emptyList(),
+        val nicknames: List<String?> = emptyList(),
+        val pronunciation: String? = null,
+        val phoneNumbers: List<String?> = emptyList(),
+        val phoneTypes: List<String?> = emptyList(),
+        val emails: List<String?> = emptyList(),
+        val emailTypes: List<String?> = emptyList(),
+        val instantMessenger: String? = null,
+        val note: String? = null,
+        val addresses: List<String?> = emptyList(),
+        val addressTypes: List<String?> = emptyList(),
+        val org: String? = null,
+        val birthday: String? = null,
+        val title: String? = null,
+        val urls: List<String?> = emptyList(),
+        val geo: List<String?> = emptyList(),
     ) : BarcodeParsedResult(text, bitmap)
 
     @Parcelize
     data class CalendarResult(
         override val text: String,
         override val bitmap: Bitmap,
-        val calendarParsedResult: CalendarParsedResult
+        private val summary: String? = null,
+        val start: Long = 0,
+        val startAllDay: Boolean = false,
+        val end: Long = 0,
+        val endAllDay: Boolean = false,
+        val location: String? = null,
+        val organizer: String? = null,
+        val attendees: List<String> = emptyList(),
+        val description: String? = null,
+        val latitude: Double = 0.0,
+        val longitude: Double = 0.0
     ) : BarcodeParsedResult(text, bitmap)
 
     @Parcelize
@@ -103,13 +124,21 @@ sealed class BarcodeParsedResult(open val text: String, open val bitmap: Bitmap)
     data class VINResult(
         override val text: String,
         override val bitmap: Bitmap,
-        val vinParsedResult: VINParsedResult
+        private val vin: String? = null,
+        val worldManufacturerID: String? = null,
+        val vehicleDescriptorSection: String? = null,
+        val vehicleIdentifierSection: String? = null,
+        val countryCode: String? = null,
+        val vehicleAttributes: String? = null,
+        val modelYear: Int = 0,
+        val plantCode: Char = 0.toChar(),
+        val sequentialNumber: String? = null
     ) : BarcodeParsedResult(text, bitmap)
 
     @Parcelize
     data class ISBNResult(
         override val text: String,
         override val bitmap: Bitmap,
-        val isbnParsedResult: ISBNParsedResult
+        val isbn: String? = null
     ) : BarcodeParsedResult(text, bitmap)
 }
