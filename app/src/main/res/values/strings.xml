@@ -113,4 +113,6 @@
     <string name="activity_not_found">Could not find any application to use this code</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="dialog_close">Close</string>
+    <string name="dialog_copy_and_close"><![CDATA[Copy & Close]]></string>
 </resources>

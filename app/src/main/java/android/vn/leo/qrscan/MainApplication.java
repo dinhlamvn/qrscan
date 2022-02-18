@@ -1,10 +1,11 @@
 package android.vn.leo.qrscan;
 
-import android.app.Application;
 import android.vn.leo.qrscan.database.SQLiteHelper;
 import android.vn.leo.qrscan.utils.LocalStorageManager;
 
-public class MainApplication extends Application {
+import androidx.multidex.MultiDexApplication;
+
+public class MainApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {

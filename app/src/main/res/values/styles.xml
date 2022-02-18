@@ -9,4 +9,16 @@
         <item name="actionModeBackground">@color/colorActionMode</item>
     </style>
 
+    <style name="AppActiveButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/colorPrimary</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:height">48dp</item>
+    </style>
+
+    <style name="AppInActiveButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="colorButtonNormal">@color/buttonBorderColor</item>
+        <item name="android:textColor">@android:color/black</item>
+        <item name="android:height">48dp</item>
+    </style>
+
 </resources>

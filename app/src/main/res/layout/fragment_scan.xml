@@ -1,22 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
 
     <com.journeyapps.barcodescanner.DecoratedBarcodeView
         android:id="@+id/zxing_barcode_scanner"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:zxing_scanner_layout="@layout/custom_scanner">
-    </com.journeyapps.barcodescanner.DecoratedBarcodeView>
+        app:zxing_scanner_layout="@layout/custom_scanner" />
 
     <FrameLayout
-        android:background="@drawable/qr_frame"
-        android:layout_width="259dp"
-        android:layout_height="209dp"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true">
+        android:layout_centerVertical="true"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/scan_frame_rectangle">
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/loading_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progress_circular"
+            style="@style/Widget.AppCompat.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
 
     </FrameLayout>
 

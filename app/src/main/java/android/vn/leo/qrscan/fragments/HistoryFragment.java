@@ -28,7 +28,9 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import androidx.annotation.NonNull;
@@ -122,7 +124,7 @@ public class HistoryFragment extends Fragment implements OnClickHistoryItemCallb
     public void onClickHistoryItemCallback(int position) {
         if (mActionMode == null) {
             // Show alert with result and image of QRCode or Barcode
-            mActivity.showResult(ResultManager.getInstance().get(position));
+            //mActivity.showResult(ResultManager.getInstance().get(position));
             return;
         }
         toggleSelection(false, position);
