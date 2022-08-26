@@ -16,5 +16,5 @@ fun Number.toPx() = TypedValue.applyDimension(
     Resources.getSystem().displayMetrics
 ).toInt()
 
-fun Fragment.screenSize(): Size =
+fun screenSize(): Size =
     Resources.getSystem().displayMetrics.run { Size(widthPixels, heightPixels) }

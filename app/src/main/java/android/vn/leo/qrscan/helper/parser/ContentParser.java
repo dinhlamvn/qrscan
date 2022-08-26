@@ -1,12 +1,11 @@
 package android.vn.leo.qrscan.helper.parser;
 
 import android.vn.leo.qrscan.data.ScanResult;
-import android.vn.leo.qrscan.interfaces.IResultParser;
+import android.vn.leo.qrscan.interfaces.CodeResultParser;
 import android.vn.leo.qrscan.interfaces.ResultWorker;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.result.ParsedResultType;
-import com.google.zxing.client.result.ResultParser;
 
 public class ContentParser {
 
@@ -18,7 +17,7 @@ public class ContentParser {
 
     public void startParse(ScanResult result) {
         ParsedResultType type = result.getType();
-        IResultParser parser = null;
+        CodeResultParser parser = null;
         switch (type) {
             case ADDRESSBOOK: {
                 parser = new ContactParser();

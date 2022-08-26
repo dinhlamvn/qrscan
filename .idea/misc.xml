@@ -3,15 +3,25 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable/ic_finder.xml" value="0.1455" />
         <entry key="app/src/main/res/drawable/ic_flash_on_24dp.xml" value="0.32037037037037036" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.164" />
         <entry key="app/src/main/res/drawable/scan_frame_retangle.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.15579710144927536" />
         <entry key="app/src/main/res/layout/activity_main_2.xml" value="0.15579710144927536" />
         <entry key="app/src/main/res/layout/custom_scanner.xml" value="0.15579710144927536" />
+        <entry key="app/src/main/res/layout/fragment_dialog_email_result.xml" value="0.2341485507246377" />
+        <entry key="app/src/main/res/layout/fragment_dialog_product_result.xml" value="0.13956433637284701" />
+        <entry key="app/src/main/res/layout/fragment_dialog_sms_result.xml" value="0.2341485507246377" />
+        <entry key="app/src/main/res/layout/fragment_dialog_tel_result.xml" value="0.15476190476190477" />
         <entry key="app/src/main/res/layout/fragment_dialog_text_result.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_dialog_url_result.xml" value="0.2078804347826087" />
+        <entry key="app/src/main/res/layout/fragment_dialog_wifi_result.xml" value="0.2341485507246377" />
         <entry key="app/src/main/res/layout/fragment_scan.xml" value="0.11904761904761904" />
         <entry key="app/src/main/res/layout/fragment_text_result.xml" value="0.11904761904761904" />
+        <entry key="app/src/main/res/layout/list_history_item.xml" value="0.12817028985507245" />
+        <entry key="app/src/main/res/menu/menumenu.xml" value="0.31666666666666665" />
+        <entry key="app/src/main/res/menu/navigation_menu.xml" value="0.13541666666666666" />
       </map>
     </option>
   </component>

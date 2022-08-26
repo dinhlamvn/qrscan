@@ -116,4 +116,17 @@
     <string name="dialog_close">Close</string>
     <string name="dialog_copy_and_close"><![CDATA[Copy & Close]]></string>
     <string name="dialog_access_url">Access</string>
+    <string name="application_handle_not_found">Can\'t found any application to handle this action.</string>
+    <string name="dialog_tel_title">Call Phone</string>
+    <string name="dialog_text_title">Text</string>
+    <string name="dialog_url_title">Web Link</string>
+    <string name="dialog_sms_title">Message</string>
+    <string name="dialog_button_send_message">Send</string>
+    <string name="dialog_email_title">Mail To</string>
+    <string name="dialog_wifi_title">Wifi</string>
+    <string name="request_wifi_success">Succeed</string>
+    <string name="dialog_search">Search</string>
+    <string name="copied">Copied</string>
+    <string name="dialog_use">Use</string>
+    <string name="error_scan_result">Can\'t decode this code</string>
 </resources>

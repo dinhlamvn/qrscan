@@ -1,5 +1,6 @@
 package android.vn.leo.qrscan.ui.scan
 
+import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import android.vn.leo.qrscan.parser.BarcodeResultParser
 import androidx.lifecycle.LiveData
@@ -18,26 +19,32 @@ class ScanViewModel(private val barcodeResultParser: BarcodeResultParser) : View
     private val _loadingEvent = MutableLiveData(false)
     val loadingEvent: LiveData<Boolean> = _loadingEvent
 
+    private val _toastEvent = MutableLiveData(0)
+    val toastEvent: LiveData<Int> = _toastEvent
+
     private var isHandlingResult = false
 
     fun handleBarcodeResult(result: BarcodeResult?) = viewModelScope.launch(Dispatchers.IO) {
         isHandlingResult = true
-        triggerLoading()
+        toggleLoading()
         val parsedResult =
-            barcodeResultParser.parse(result) ?: return@launch triggerLoading(false)
-        triggerLoading(false)
+            barcodeResultParser.parse(result) ?: return@launch kotlin.run {
+                toggleLoading()
+                _toastEvent.postValue(R.string.error_scan_result)
+            }
+        toggleLoading()
         _handleResultEvent.postValue(parsedResult)
     }
 
-    private fun triggerLoading(showLoading: Boolean = true) =
-        _loadingEvent.postValue(showLoading)
+    private fun toggleLoading() =
+        _loadingEvent.postValue(_loadingEvent.value?.not() ?: true)
 
-    fun validStateOnPause(block: () -> Unit) {
+    fun validateBarcodeViewOnPause(block: () -> Unit) {
         if (isHandlingResult) return
         block.invoke()
     }
 
-    fun validStateOnResume(block: () -> Unit) {
+    fun validateBarcodeViewOnResume(block: () -> Unit) {
         if (isHandlingResult) return
         block.invoke()
     }

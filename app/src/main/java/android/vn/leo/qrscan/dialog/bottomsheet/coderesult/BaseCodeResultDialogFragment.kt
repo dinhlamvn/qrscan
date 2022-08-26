@@ -1,10 +1,13 @@
 package android.vn.leo.qrscan.dialog.bottomsheet.coderesult
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.base.ui.BaseBottomSheetDialogFragment
+import android.vn.leo.qrscan.extensions.showToast
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 
 abstract class BaseCodeResultDialogFragment<T : BarcodeParsedResult> :
@@ -30,4 +33,12 @@ abstract class BaseCodeResultDialogFragment<T : BarcodeParsedResult> :
     }
 
     abstract fun setupUI(result: T)
+
+    protected fun startActivityWithImplicitIntent(intent: Intent) {
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(intent)
+        } else {
+            showToast(R.string.application_handle_not_found)
+        }
+    }
 }

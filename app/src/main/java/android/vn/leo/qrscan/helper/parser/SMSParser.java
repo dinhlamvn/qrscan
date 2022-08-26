@@ -1,16 +1,15 @@
 package android.vn.leo.qrscan.helper.parser;
 
-import android.vn.leo.qrscan.interfaces.IResultParser;
+import android.vn.leo.qrscan.interfaces.CodeResultParser;
 import android.vn.leo.qrscan.interfaces.ResultWorker;
 
 import com.google.zxing.Result;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ResultParser;
 import com.google.zxing.client.result.SMSMMSResultParser;
-import com.google.zxing.client.result.SMSParsedResult;
 import com.google.zxing.client.result.SMSTOMMSTOResultParser;
 
-public class SMSParser implements IResultParser {
+public class SMSParser implements CodeResultParser {
 
     @Override
     public void parse(Result result, ResultWorker callback) {

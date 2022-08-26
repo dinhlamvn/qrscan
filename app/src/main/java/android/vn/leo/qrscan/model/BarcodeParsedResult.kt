@@ -55,11 +55,11 @@ sealed class BarcodeParsedResult(open val text: String, open val bitmap: Bitmap)
         val ssid: String,
         val password: String,
         val isHidden: Boolean,
-        val anonymousIdentity: String,
-        val eapMethod: String,
-        val identity: String,
-        val networkEncryption: String,
-        val phase2Method: String
+        val anonymousIdentity: String?,
+        val eapMethod: String?,
+        val identity: String?,
+        val networkEncryption: String?,
+        val phase2Method: String?
     ) : BarcodeParsedResult(text, bitmap)
 
     @Parcelize

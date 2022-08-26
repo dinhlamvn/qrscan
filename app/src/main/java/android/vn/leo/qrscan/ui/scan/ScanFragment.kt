@@ -11,10 +11,15 @@ import android.vn.leo.qrscan.extensions.showToast
 import android.vn.leo.qrscan.extensions.toPx
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import android.vn.leo.qrscan.parser.BarcodeResultParser
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.ResultPoint
-import com.journeyapps.barcodescanner.*
+import com.journeyapps.barcodescanner.BarcodeCallback
+import com.journeyapps.barcodescanner.BarcodeResult
+import com.journeyapps.barcodescanner.BarcodeView
+import com.journeyapps.barcodescanner.DecoratedBarcodeView
+import com.journeyapps.barcodescanner.Size
 
 class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.TorchListener {
 
@@ -39,12 +44,14 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
         barcodeView.framingRectSize = Size(screenSize().width - 64.toPx(), 400.toPx())
         decoratedBarcodeView.decodeContinuous(this)
         decoratedBarcodeView.setTorchListener(this)
-        scanViewModel.handleResultEvent.observe(this, ::handleBarcodeParsedResult)
-        scanViewModel.loadingEvent.observe(this, ::handleLoading)
+        scanViewModel.handleResultEvent.observe(viewLifecycleOwner, ::handleBarcodeParsedResult)
+        scanViewModel.loadingEvent.observe(viewLifecycleOwner, ::handleLoading)
+        scanViewModel.toastEvent.observe(viewLifecycleOwner, ::showToast)
     }
 
     private fun handleBarcodeParsedResult(barcodeParsedResult: BarcodeParsedResult) {
         val blockOnDismiss = {
+            Toast.makeText(requireContext(), R.string.error_scan_result, Toast.LENGTH_SHORT).show()
             decoratedBarcodeView.resume()
         }
         resultDialogDelegate.showResultDialog(barcodeParsedResult, blockOnDismiss, blockOnDismiss)
@@ -73,14 +80,14 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
 
     override fun onPause() {
         super.onPause()
-        scanViewModel.validStateOnPause {
+        scanViewModel.validateBarcodeViewOnPause {
             decoratedBarcodeView.pauseAndWait()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        scanViewModel.validStateOnResume {
+        scanViewModel.validateBarcodeViewOnResume {
             decoratedBarcodeView.resume()
         }
     }

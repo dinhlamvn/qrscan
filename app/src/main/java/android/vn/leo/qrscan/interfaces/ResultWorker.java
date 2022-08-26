@@ -4,8 +4,6 @@ import com.google.zxing.client.result.ParsedResult;
 
 public interface ResultWorker {
 
-    void release();
-
     void copyText(ParsedResult result);
 
     void sendSMS(ParsedResult result);

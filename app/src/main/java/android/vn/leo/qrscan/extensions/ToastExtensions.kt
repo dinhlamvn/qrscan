@@ -20,5 +20,6 @@ fun Fragment.showToast(
     @StringRes textRes: Int,
     duration: Int = Toast.LENGTH_SHORT
 ) {
+    if (textRes == 0) return
     showToast(getString(textRes), duration)
 }

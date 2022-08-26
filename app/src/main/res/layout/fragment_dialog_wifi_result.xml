@@ -13,7 +13,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:gravity="center"
-        android:text="@string/dialog_url_title"
+        android:text="@string/dialog_wifi_title"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -29,7 +29,6 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/text_view_scan_result"
-        style="@style/TextBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -37,6 +36,7 @@
         android:layout_marginEnd="32dp"
         android:ellipsize="middle"
         android:gravity="center"
+        style="@style/TextBody"
         android:maxLines="2"
         android:text="@string/can_not_save_image"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:text="@string/dialog_access_url"
+        android:text="@string/dialog_use"
         app:layout_constraintTop_toBottomOf="@id/text_view_scan_result" />
 
     <androidx.appcompat.widget.AppCompatButton

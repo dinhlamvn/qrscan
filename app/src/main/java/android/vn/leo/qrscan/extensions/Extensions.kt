@@ -13,9 +13,7 @@ fun String.copyToClipboard(context: Context): Boolean {
 }
 
 fun String.share(context: Context, subject: String = "", choose: Boolean = false) {
-    val resolvedSubject = if (subject.isNotEmpty()) {
-        subject
-    } else {
+    val resolvedSubject = subject.ifEmpty {
         context.applicationInfo.loadLabel(context.packageManager)
     }
     val intent = Intent(Intent.ACTION_SEND)
