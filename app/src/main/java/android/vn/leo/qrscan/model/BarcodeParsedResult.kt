@@ -22,9 +22,9 @@ sealed class BarcodeParsedResult(open val text: String, open val bitmap: Bitmap)
     data class TelResult(
         override val text: String,
         override val bitmap: Bitmap,
-        val title: String,
+        val title: String?,
         val phoneNumber: String,
-        val uri: String
+        val uri: String?
     ) : BarcodeParsedResult(text, bitmap)
 
     @Parcelize

@@ -37,8 +37,6 @@
         android:ellipsize="middle"
         android:gravity="center"
         style="@style/TextBody"
-        android:maxLines="2"
-        android:text="@string/can_not_save_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/image_review_scan_result" />

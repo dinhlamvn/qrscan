@@ -4,105 +4,17 @@
     <string name="developer_contact">dinhlamvn353@gmail.com</string>
     <string name="app_header">The QRCode\n&amp;\nBarcode Scanner</string>
 
-    <string name="screen_scan">SCAN</string>
-    <string name="screen_history">HISTORY</string>
     <string name="scan_description">MOVE CAMERA TO CODE</string>
-
-    <!-- Resource for setting screen -->
-    <string name="setting_title_result">Result</string>
-    <string name="setting_title_storage">Storage</string>
-    <string name="setting_title_others">Others</string>
-
-    <!-- Share message send to other user -->
-    <string name="share_message">This is a very good app to scan QRCode and Barcode. You can download it by link below.</string>
-
-    <string name="dialog_result_title">Result</string>
-    <string name="dialog_result_confirm_1">USE</string>
-    <string name="dialog_result_confirm_2">SHARE</string>
-    <string name="dialog_result_confirm_3">COPY &amp;CLOSE</string>
-
-    <string name="toast_result_empty">The result is empty</string>
-
-    <string name="dialog_notice_title">Notice</string>
-    <string name="dialog_button_open">Open</string>
-    <string name="dialog_button_cancel">Cancel</string>
-    <string name="dialog_button_call">Call</string>
-
-    <!-- Resource for menu -->
-    <string name="menu_item_home">Home</string>
-    <string name="menu_item_setting">Setting</string>
-    <string name="menu_item_rate">Rating</string>
-    <string name="menu_item_share">Sharing</string>
     <string name="menu_item_about">About</string>
-    <string name="menu_item_exit">Exit</string>
-
-
-    <!-- String resource for setting -->
-    <string name="label_checkbox_auto_copy">Auto copy result after scan</string>
-    <string name="label_checkbox_auto_use">Auto use result after scan</string>
-    <string name="label_checkbox_auto_make_call">Turn on confirm to use a call phone</string>
-    <string name="label_checkbox_auto_access_to_url">Turn on confirm to access to the Web URL</string>
-    <string name="label_checkbox_save_image_code">Save capture image of code</string>
-    <string name="label_checkbox_enable_sound">Enable sound</string>
-    <string name="label_checkbox_enable_vibrate">Enable vibrate</string>
-
-    <!-- Notify message resource -->
-    <string name="toast_message_accept_setting">Setting saved</string>
-    <string name="toast_message_removed">You are removed one item</string>
-    <string name="toast_message_removed_list">You are removed xxx item</string>
-    <string name="toast_message_restored">Restored one item succeed</string>
-    <string name="toast_message_restored_list">Restored xxx item succeed</string>
-    <string name="toast_message_copied">Copied to clipboard…!!</string>
-    <string name="toast_message_auto_use">Allow application auto use result of code after scanned</string>
-
     <!-- About dialog resource -->
     <string name="dialog_about_title">Info</string>
     <string name="dialog_about_message">Application name: %s \nVersion: %s \nDeveloper: %s \nContact: %s</string>
     <string name="dialog_about_button">OK</string>
 
-    <!-- Confirm dialog message -->
-    <string name="dialog_open_web_web_browser">Web Browser</string>
-    <string name="dialog_call_call">call to phone number</string>
-    <string name="dialog_open_web_confirm_message">Do you want to open %s with the url is: %s ?</string>
-    <string name="dialog_call_confirm_message">Do you want to %s: %s ?</string>
-
-    <!-- Other resource -->
-    <string name="chose_app_share">CHOSE APP TO SHARE</string>
-    <string name="can_not_save_image">Can not save image</string>
-    <string name="chose_app_send_mail">CHOSE APP TO SEND MAIL</string>
-    <string name="undo_text">UNDO</string>
-    <string name="removed_text">Removed</string>
-    <string name="removed_fail_text">Remove failed</string>
-
-    <!-- Title resource -->
-    <string name="title_with_text">TEXT</string>
-    <string name="title_with_call">CALL PHONE</string>
-    <string name="title_with_sms">MESSAGE</string>
-    <string name="title_with_url">WEB URL</string>
-    <string name="title_with_email">EMAIL</string>
-    <string name="title_with_vcard">CONTACT</string>
-    <string name="title_with_barcode">PRODUCT</string>
-    <string name="title_with_wifi">WIFI</string>
-
-    <!-- Use resource -->
-    <string name="use_with_text">COPY</string>
-    <string name="use_with_call">CALL</string>
-    <string name="use_with_sms">SEND</string>
-    <string name="use_with_url">ACCESS</string>
-    <string name="use_with_email">SEND</string>
-    <string name="use_with_vcard">ADD</string>
-    <string name="use_with_wifi">CONNECT</string>
-    <string name="use_with_product">RESEARCH</string>
-
     <!-- Flash text -->
     <string name="light_flash_on">Light Flash On</string>
     <string name="light_flash_off">Light Flash Off</string>
 
-    <!-- Wifi text -->
-    <string name="wifi_connect_toast">Wifi started connect to %s</string>
-    <string name="enable_wifi_toast">Enable wifi</string>
-
-    <!-- Permission text -->
     <string name="permission_camera_allow">Allow application access to your camera</string>
     <string name="permission_camera_denied">Please allow application access to your camera to scan QRCode &amp; Barcode</string>
     <string name="permission_storage_allow">Allow application access to your phone storage</string>
@@ -110,9 +22,6 @@
     <string name="permission_call_allow">Allow application make a call</string>
     <string name="permission_call_denied">Please allow application make a call to use QRCode call</string>
 
-    <string name="activity_not_found">Could not find any application to use this code</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="dialog_close">Close</string>
     <string name="dialog_copy_and_close"><![CDATA[Copy & Close]]></string>
     <string name="dialog_access_url">Access</string>

@@ -14,7 +14,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.FragmentManager
-import com.bumptech.glide.Glide
 
 class TelResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult.TelResult>(),
     OnResultDialog {
@@ -37,7 +36,7 @@ class TelResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult
         tvScanResult.text = result.text
 
         btnCall.setOnClickListener {
-            startActivityWithImplicitIntent(Intent(Intent.ACTION_CALL, Uri.parse(result.uri)))
+            startActivityWithImplicitIntent(Intent(Intent.ACTION_DIAL, Uri.parse(result.uri)))
         }
 
         btnDismiss.setOnClickListener {

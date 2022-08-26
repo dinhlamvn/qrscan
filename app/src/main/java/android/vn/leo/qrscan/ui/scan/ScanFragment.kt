@@ -51,7 +51,6 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
 
     private fun handleBarcodeParsedResult(barcodeParsedResult: BarcodeParsedResult) {
         val blockOnDismiss = {
-            Toast.makeText(requireContext(), R.string.error_scan_result, Toast.LENGTH_SHORT).show()
             decoratedBarcodeView.resume()
         }
         resultDialogDelegate.showResultDialog(barcodeParsedResult, blockOnDismiss, blockOnDismiss)
