@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:zxing_framing_rect_height="200dp"
-        app:zxing_framing_rect_width="250dp">
-    </com.journeyapps.barcodescanner.BarcodeView>
+        app:zxing_framing_rect_width="250dp" />
 
     <com.journeyapps.barcodescanner.ViewfinderView
         android:id="@+id/zxing_viewfinder_view"
@@ -21,18 +20,18 @@
         app:zxing_viewfinder_laser="@color/colorPrimaryDark"
         app:zxing_viewfinder_mask="@color/transparent_blue" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/zxing_status_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|center_horizontal"
-        android:gravity="center_vertical"
         android:layout_marginTop="40dp"
-        android:text="@string/scan_description"
-        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
-        android:textColor="@color/zxing_status_text"
         android:drawableStart="@drawable/ic_finder"
         android:drawableEnd="@drawable/ic_finder"
-        android:drawablePadding="3dp"/>
+        android:drawablePadding="3dp"
+        android:gravity="center_vertical"
+        android:text="@string/scan_description"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small.Inverse"
+        android:textColor="@color/zxing_status_text" />
 
 </merge>

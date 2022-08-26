@@ -2,40 +2,34 @@ package android.vn.leo.qrscan.dialog.bottomsheet.coderesult.dialog
 
 import android.content.Intent
 import android.os.Bundle
-import android.vn.leo.qrscan.R
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import android.vn.leo.qrscan.databinding.FragmentDialogEmailResultBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
 import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
-import android.vn.leo.qrscan.extensions.bindView
 import android.vn.leo.qrscan.extensions.loadAsScanResult
 import android.vn.leo.qrscan.model.BarcodeParsedResult
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.FragmentManager
-import com.bumptech.glide.Glide
 
-class EmailResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResult.EmailResult>(),
+class EmailResultDialogFragment :
+    BaseCodeResultDialogFragment<FragmentDialogEmailResultBinding, BarcodeParsedResult.EmailResult>(),
     OnResultDialog {
 
-    companion object {
-        private const val TAG = "EmailResultDialogFragment"
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): FragmentDialogEmailResultBinding {
+        return FragmentDialogEmailResultBinding.inflate(inflater, container, false)
     }
 
-    private val ivScanResult: ImageView by bindView(R.id.image_review_scan_result)
-    private val tvScanResult: TextView by bindView(R.id.text_view_scan_result)
-    private val btnSend: Button by bindView(R.id.button_send)
-    private val btnDismiss: Button by bindView(R.id.button_dismiss)
+    override fun onRenderScanResult(result: BarcodeParsedResult.EmailResult) {
+        result.bitmap.loadAsScanResult(this, viewBinding.imageReviewScanResult)
 
-    override val layoutRes: Int
-        get() = R.layout.fragment_dialog_email_result
+        viewBinding.textViewScanResult.text = result.text
 
-    override fun setupUI(result: BarcodeParsedResult.EmailResult) {
-        result.bitmap.loadAsScanResult(this, ivScanResult)
-
-        tvScanResult.text = result.text
-
-        btnSend.setOnClickListener {
+        viewBinding.buttonSend.setOnClickListener {
             val intent = Intent(Intent.ACTION_SENDTO)
             intent.type = "text/plain"
             intent.putStringArrayListExtra(Intent.EXTRA_EMAIL, ArrayList(result.receivers))
@@ -43,10 +37,10 @@ class EmailResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResu
             intent.putStringArrayListExtra(Intent.EXTRA_BCC, ArrayList(result.bcCs))
             intent.putExtra(Intent.EXTRA_SUBJECT, result.subject)
             intent.putExtra(Intent.EXTRA_TEXT, result.body)
-            startActivityWithImplicitIntent(intent)
+            startActivity(intent)
         }
 
-        btnDismiss.setOnClickListener {
+        viewBinding.buttonDismiss.setOnClickListener {
             dismiss()
         }
     }
@@ -59,6 +53,6 @@ class EmailResultDialogFragment : BaseCodeResultDialogFragment<BarcodeParsedResu
         EmailResultDialogFragment().apply {
             this.dismissListener = dismissListener
             this.arguments = argument
-        }.show(fragmentManager, TAG)
+        }.show(fragmentManager, "EmailResultDialogFragment")
     }
 }

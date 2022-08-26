@@ -1,34 +1,36 @@
 package android.vn.leo.qrscan.ui.scan
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.base.ui.BaseFragment
+import android.vn.leo.qrscan.databinding.FragmentScanBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.ResultDialogDelegate
-import android.vn.leo.qrscan.extensions.bindView
 import android.vn.leo.qrscan.extensions.screenSize
 import android.vn.leo.qrscan.extensions.showToast
 import android.vn.leo.qrscan.extensions.toPx
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import android.vn.leo.qrscan.parser.BarcodeResultParser
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider
 import com.google.zxing.ResultPoint
 import com.journeyapps.barcodescanner.BarcodeCallback
 import com.journeyapps.barcodescanner.BarcodeResult
-import com.journeyapps.barcodescanner.BarcodeView
 import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.Size
 
-class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.TorchListener {
+class ScanFragment : BaseFragment<FragmentScanBinding>(), BarcodeCallback,
+    DecoratedBarcodeView.TorchListener {
 
-    override val layoutRes: Int
-        get() = R.layout.fragment_scan
-
-    private val barcodeView: BarcodeView by bindView(R.id.zxing_barcode_surface)
-    private val decoratedBarcodeView: DecoratedBarcodeView by bindView(R.id.zxing_barcode_scanner)
-    private val loadingView: View by bindView(R.id.loading_view)
+    override fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): FragmentScanBinding {
+        return FragmentScanBinding.inflate(inflater, container, false)
+    }
 
     private val scanViewModelFactory = ScanViewModelFactory(BarcodeResultParser())
 
@@ -40,10 +42,11 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
         ResultDialogDelegate(childFragmentManager)
     }
 
-    override fun setupUI(view: View, savedInstanceState: Bundle?) {
-        barcodeView.framingRectSize = Size(screenSize().width - 64.toPx(), 400.toPx())
-        decoratedBarcodeView.decodeContinuous(this)
-        decoratedBarcodeView.setTorchListener(this)
+    override fun onRenderView(view: View, savedInstanceState: Bundle?) {
+        viewBinding.zxingBarcodeScanner.barcodeView.framingRectSize =
+            Size(screenSize().width - 64.toPx(), 400.toPx())
+        viewBinding.zxingBarcodeScanner.decodeContinuous(this)
+        viewBinding.zxingBarcodeScanner.setTorchListener(this)
         scanViewModel.handleResultEvent.observe(viewLifecycleOwner, ::handleBarcodeParsedResult)
         scanViewModel.loadingEvent.observe(viewLifecycleOwner, ::handleLoading)
         scanViewModel.toastEvent.observe(viewLifecycleOwner, ::showToast)
@@ -51,17 +54,17 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
 
     private fun handleBarcodeParsedResult(barcodeParsedResult: BarcodeParsedResult) {
         val blockOnDismiss = {
-            decoratedBarcodeView.resume()
+            viewBinding.zxingBarcodeScanner.resume()
         }
         resultDialogDelegate.showResultDialog(barcodeParsedResult, blockOnDismiss, blockOnDismiss)
     }
 
     private fun handleLoading(showLoading: Boolean) {
-        loadingView.isVisible = showLoading
+        viewBinding.progressCircular.isVisible = showLoading
     }
 
     override fun barcodeResult(result: BarcodeResult?) {
-        decoratedBarcodeView.pauseAndWait()
+        viewBinding.zxingBarcodeScanner.pauseAndWait()
         scanViewModel.handleBarcodeResult(result)
     }
 
@@ -80,20 +83,20 @@ class ScanFragment : BaseFragment(), BarcodeCallback, DecoratedBarcodeView.Torch
     override fun onPause() {
         super.onPause()
         scanViewModel.validateBarcodeViewOnPause {
-            decoratedBarcodeView.pauseAndWait()
+            viewBinding.zxingBarcodeScanner.pauseAndWait()
         }
     }
 
     override fun onResume() {
         super.onResume()
         scanViewModel.validateBarcodeViewOnResume {
-            decoratedBarcodeView.resume()
+            viewBinding.zxingBarcodeScanner.resume()
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        decoratedBarcodeView.decodeContinuous(null)
-        decoratedBarcodeView.setTorchListener(null)
+        viewBinding.zxingBarcodeScanner.decodeContinuous(null)
+        viewBinding.zxingBarcodeScanner.setTorchListener(null)
     }
 }

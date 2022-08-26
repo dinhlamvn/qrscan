@@ -5,23 +5,31 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.viewbinding.ViewBinding
 
-abstract class BaseFragment : Fragment() {
+abstract class BaseFragment<VB : ViewBinding> : Fragment() {
 
-    protected abstract val layoutRes: Int
+    protected lateinit var viewBinding: VB
+
+    protected abstract fun createViewBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): VB
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(layoutRes, container, false)
+        viewBinding = createViewBinding(inflater, container, savedInstanceState)
+        return viewBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupUI(view, savedInstanceState)
+        onRenderView(view, savedInstanceState)
     }
 
-    abstract fun setupUI(view: View, savedInstanceState: Bundle?)
+    abstract fun onRenderView(view: View, savedInstanceState: Bundle?)
 }
