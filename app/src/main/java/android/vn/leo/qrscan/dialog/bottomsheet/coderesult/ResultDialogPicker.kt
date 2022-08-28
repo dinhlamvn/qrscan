@@ -11,6 +11,6 @@ class ResultDialogPicker {
         is BarcodeParsedResult.SmsResult -> SMSResultDialogFragment()
         is BarcodeParsedResult.EmailResult -> EmailResultDialogFragment()
         is BarcodeParsedResult.WifiResult -> WifiResultDialogFragment()
-        else -> null
+        else -> TextResultDialogFragment()
     }
 }
