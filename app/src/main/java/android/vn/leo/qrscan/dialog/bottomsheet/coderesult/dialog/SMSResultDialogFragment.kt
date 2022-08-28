@@ -10,7 +10,6 @@ import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.databinding.FragmentDialogSmsResultBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
-import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
 import android.vn.leo.qrscan.extensions.showToast
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import androidx.fragment.app.FragmentManager
@@ -55,11 +54,9 @@ class SMSResultDialogFragment :
 
     override fun showDialog(
         fragmentManager: FragmentManager,
-        argument: Bundle,
-        dismissListener: OnDialogDismissListener?
+        argument: Bundle
     ) {
         SMSResultDialogFragment().apply {
-            this.dismissListener = dismissListener
             this.arguments = argument
         }.show(fragmentManager, "SMSResultDialogFragment")
     }

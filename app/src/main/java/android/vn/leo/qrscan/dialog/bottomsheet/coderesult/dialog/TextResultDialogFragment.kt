@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.vn.leo.qrscan.databinding.FragmentDialogTextResultBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
-import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
 import android.vn.leo.qrscan.extensions.copyToClipboard
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import androidx.fragment.app.FragmentManager
@@ -43,11 +42,9 @@ class TextResultDialogFragment :
 
     override fun showDialog(
         fragmentManager: FragmentManager,
-        argument: Bundle,
-        dismissListener: OnDialogDismissListener?
+        argument: Bundle
     ) {
         TextResultDialogFragment().apply {
-            this.dismissListener = dismissListener
             this.arguments = argument
         }.show(fragmentManager, "TextResultDialogFragment")
     }

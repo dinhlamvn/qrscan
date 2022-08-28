@@ -6,10 +6,9 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 abstract class BaseBottomSheetDialogFragment : BottomSheetDialogFragment() {
 
-    var dismissListener: OnDialogDismissListener? = null
-
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        dismissListener?.onDismiss()
+        val dismissListener = parentFragment as? OnDialogDismissListener ?: return
+        dismissListener.onDismiss()
     }
 }

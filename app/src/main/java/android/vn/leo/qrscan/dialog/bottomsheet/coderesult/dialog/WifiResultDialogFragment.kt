@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import android.vn.leo.qrscan.databinding.FragmentDialogWifiResultBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
-import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
 import android.vn.leo.qrscan.helper.NetworkHelper
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import androidx.fragment.app.FragmentManager
@@ -47,11 +46,9 @@ class WifiResultDialogFragment :
 
     override fun showDialog(
         fragmentManager: FragmentManager,
-        argument: Bundle,
-        dismissListener: OnDialogDismissListener?
+        argument: Bundle
     ) {
         WifiResultDialogFragment().apply {
-            this.dismissListener = dismissListener
             this.arguments = argument
         }.show(fragmentManager, "WifiResultDialogFragment")
     }

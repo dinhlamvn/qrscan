@@ -8,6 +8,7 @@ import android.vn.leo.qrscan.R
 import android.vn.leo.qrscan.base.ui.BaseFragment
 import android.vn.leo.qrscan.databinding.FragmentScanBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.ResultDialogDelegate
+import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
 import android.vn.leo.qrscan.extensions.screenSize
 import android.vn.leo.qrscan.extensions.showToast
 import android.vn.leo.qrscan.extensions.toPx
@@ -22,7 +23,11 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView
 import com.journeyapps.barcodescanner.Size
 
 class ScanFragment : BaseFragment<FragmentScanBinding>(), BarcodeCallback,
-    DecoratedBarcodeView.TorchListener {
+    DecoratedBarcodeView.TorchListener, OnDialogDismissListener {
+
+    override fun onDismiss() {
+        viewBinding.zxingBarcodeScanner.resume()
+    }
 
     override fun createViewBinding(
         inflater: LayoutInflater,
@@ -53,10 +58,7 @@ class ScanFragment : BaseFragment<FragmentScanBinding>(), BarcodeCallback,
     }
 
     private fun handleBarcodeParsedResult(barcodeParsedResult: BarcodeParsedResult) {
-        val blockOnDismiss = {
-            viewBinding.zxingBarcodeScanner.resume()
-        }
-        resultDialogDelegate.showResultDialog(barcodeParsedResult, blockOnDismiss, blockOnDismiss)
+        resultDialogDelegate.showResultDialog(barcodeParsedResult)
     }
 
     private fun handleLoading(showLoading: Boolean) {

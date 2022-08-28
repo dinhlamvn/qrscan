@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.vn.leo.qrscan.databinding.FragmentDialogUrlResultBinding
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.BaseCodeResultDialogFragment
 import android.vn.leo.qrscan.dialog.bottomsheet.coderesult.OnResultDialog
-import android.vn.leo.qrscan.dialog.listener.OnDialogDismissListener
 import android.vn.leo.qrscan.extensions.loadAsScanResult
 import android.vn.leo.qrscan.model.BarcodeParsedResult
 import androidx.browser.customtabs.CustomTabsIntent
@@ -44,11 +43,9 @@ class UrlResultDialogFragment :
 
     override fun showDialog(
         fragmentManager: FragmentManager,
-        argument: Bundle,
-        dismissListener: OnDialogDismissListener?
+        argument: Bundle
     ) {
         UrlResultDialogFragment().apply {
-            this.dismissListener = dismissListener
             this.arguments = argument
         }.show(fragmentManager, "UrlResultDialogFragment")
     }
